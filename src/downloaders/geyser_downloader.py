@@ -1,4 +1,4 @@
-from minecraft_updater.geysermc_downloader import GeyserMcDownloader
+from downloaders.geysermc_downloader import GeyserMcDownloader
 
 class GeyserDownloader(GeyserMcDownloader):
     API_BASE_URL_V2_LATEST = "https://download.geysermc.org/v2/projects/geyser/versions/latest/builds/latest"

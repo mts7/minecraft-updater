@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "minecraft_updater"
-version = "1.0.1"
+version = "2.0.0"
 authors = [
   { name="Mike Rodarte", email="github@mts7.com" },
 ]
@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.scripts]
-minecraft-updater = "minecraft_updater.main:main"
+minecraft-updater = "src.main:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

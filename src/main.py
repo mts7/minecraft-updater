@@ -1,7 +1,6 @@
-from minecraft_updater.paper_downloader import PaperDownloader
-from minecraft_updater.geyser_downloader import GeyserDownloader
-from minecraft_updater.geyser_floodgate_downloader import FloodgateDownloader
-from minecraft_updater.viaversion_downloader import ViaVersionDownloader
+from downloaders.paper_downloader import PaperDownloader
+from downloaders.geyser_downloader import GeyserDownloader
+from downloaders.geyser_floodgate_downloader import FloodgateDownloader
 
 DOWNLOAD_DIRECTORY = "downloads"
 
@@ -37,11 +36,6 @@ def main():
         print(f"Latest Floodgate Build: {latest_floodgate_build}")
     else:
         print("Could not retrieve latest Floodgate version and build.")
-
-    viaversion_downloader = ViaVersionDownloader(download_directory=DOWNLOAD_DIRECTORY)
-    print("\n--- Checking and Downloading Latest ViaVersion ---")
-    viaversion_downloader.download_latest()
-    print("--- ViaVersion check complete. ---")
 
 if __name__ == "__main__":
     main()
