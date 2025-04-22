@@ -10,11 +10,6 @@ if __name__ == "__main__":
     print("\n--- Processing Paper Minecraft ---")
     paper_downloader.download()
 
-    # Later, you'll do something similar for other projects:
-    # dynmap_updater = DynmapUpdater()
-    # print("\n--- Processing Dynmap ---")
-    # dynmap_updater.update()
-
     geyser_downloader = GeyserDownloader(DOWNLOAD_DIRECTORY)
     print("--- Checking and Downloading Latest Geyser ---")
     geyser_downloader.download_latest()
