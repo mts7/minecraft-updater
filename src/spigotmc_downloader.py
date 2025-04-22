@@ -5,9 +5,9 @@ from bs4 import BeautifulSoup
 from tqdm import tqdm
 
 class SpigotMCPluginDownloader:
-    SPIGOTMC_URL = ""  # To be defined in subclasses
-    DEFAULT_DOWNLOAD_DIR = ""  # To be defined in subclasses
-    FILENAME = ""  # To be defined in subclasses
+    SPIGOTMC_URL = ""
+    DEFAULT_DOWNLOAD_DIR = ""
+    FILENAME = ""
 
     def __init__(self, download_directory, filename, spigotmc_url):
         self.download_directory = download_directory

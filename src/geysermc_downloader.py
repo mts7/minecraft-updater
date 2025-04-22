@@ -5,11 +5,11 @@ import json
 import hashlib
 
 class GeyserMcDownloader:
-    API_BASE_URL_V2_LATEST = ""  # To be defined in subclasses
+    API_BASE_URL_V2_LATEST = ""
     DOWNLOAD_BASE_URL_V2 = "https://download.geysermc.org/v2/projects/{project}/versions/{version}/builds/{build}/downloads/{download}"
-    PROJECT = ""  # To be defined in subclasses
-    DOWNLOAD_SUBPATH = ""  # To be defined in subclasses
-    DEFAULT_DOWNLOAD_DIR = ""  # To be defined in subclasses
+    PROJECT = ""
+    DOWNLOAD_SUBPATH = ""
+    DEFAULT_DOWNLOAD_DIR = ""
 
     def __init__(self, download_directory):
         self.download_directory = download_directory

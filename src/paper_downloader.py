@@ -47,7 +47,6 @@ class StableVersionStrategy(VersionFetchStrategy):
             if not versions:
                 return None, None
 
-            # Start with the latest version
             for version in reversed(versions):
                 url_version = f"{BASE_URL}/projects/{PROJECT}/versions/{version}"
                 response_version = requests.get(url_version)
@@ -56,9 +55,8 @@ class StableVersionStrategy(VersionFetchStrategy):
                 builds = version_data['builds']
 
                 if not builds:
-                    continue  # No builds for this version
+                    continue
 
-                # Check the latest build of this version
                 latest_build_number = builds[-1]
                 url_build = f"{BASE_URL}/projects/{PROJECT}/versions/{version}/builds/{latest_build_number}"
                 response_build = requests.get(url_build)
@@ -67,13 +65,12 @@ class StableVersionStrategy(VersionFetchStrategy):
                 if build_data.get('channel') == 'default':
                     return version, latest_build_number
 
-                # Consider checking other builds in reverse chronological order
                 for build_number in reversed(builds[:-1]):
                     build_data = self._get_build_data_static(version, build_number)
                     if build_data and build_data.get('channel') == 'default':
                         return version, build_number
 
-            return None, None  # No stable version and build found
+            return None, None
         except requests.exceptions.RequestException as e:
             print(f"Error fetching Paper project info: {e}")
             return None, None
