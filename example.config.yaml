@@ -1,0 +1,7 @@
+servers:
+  server-one:
+    download_directory: "/home/gamer/Minecraft/downloads"
+    server_directory: "/home/gamer/Minecraft/server-one"
+    backup_directory: "/home/gamer/Minecraft/backups"
+    screen_name: "minecraft"
+    backup_exclude: ["logs"]
