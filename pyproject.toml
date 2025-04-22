@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=61.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "minecraft_updater"
+version = "1.0.1"
+authors = [
+  { name="Mike Rodarte", email="github@mts7.com" },
+]
+description = "Utility to find and download the latest Minecraft server and plugin files"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "requests",
+    "tqdm",
+    "beautifulsoup4",
+]
+
+[project.scripts]
+minecraft-updater = "minecraft_updater.main:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

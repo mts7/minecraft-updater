@@ -1,4 +1,4 @@
-from src.geysermc_downloader import GeyserMcDownloader
+from minecraft_updater.geysermc_downloader import GeyserMcDownloader
 
 class FloodgateDownloader(GeyserMcDownloader):
     API_BASE_URL_V2_LATEST = "https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest"

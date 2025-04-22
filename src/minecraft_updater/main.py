@@ -1,11 +1,11 @@
-from src.paper_downloader import PaperDownloader
-from src.geyser_downloader import GeyserDownloader
-from src.geyser_floodgate_downloader import FloodgateDownloader
-from src.viaversion_downloader import ViaVersionDownloader
+from minecraft_updater.paper_downloader import PaperDownloader
+from minecraft_updater.geyser_downloader import GeyserDownloader
+from minecraft_updater.geyser_floodgate_downloader import FloodgateDownloader
+from minecraft_updater.viaversion_downloader import ViaVersionDownloader
 
 DOWNLOAD_DIRECTORY = "downloads"
 
-if __name__ == "__main__":
+def main():
     paper_downloader = PaperDownloader(DOWNLOAD_DIRECTORY)
     print("\n--- Processing Paper Minecraft ---")
     paper_downloader.download()
@@ -42,3 +42,6 @@ if __name__ == "__main__":
     print("\n--- Checking and Downloading Latest ViaVersion ---")
     viaversion_downloader.download_latest()
     print("--- ViaVersion check complete. ---")
+
+if __name__ == "__main__":
+    main()
