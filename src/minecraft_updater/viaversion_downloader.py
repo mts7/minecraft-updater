@@ -1,4 +1,4 @@
-from src.spigotmc_downloader import SpigotMCPluginDownloader
+from minecraft_updater.spigotmc_downloader import SpigotMCPluginDownloader
 
 class ViaVersionDownloader(SpigotMCPluginDownloader):
     SPIGOTMC_URL = "https://www.spigotmc.org/resources/viaversion.19254/"
