@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 BASE_URL = "https://api.papermc.io/v2"
 PROJECT = "paper"
 CACHE_FILE = "paper_build_cache.json"
-DEFAULT_DOWNLOAD_DIR = "paper_downloads"
+DEFAULT_DOWNLOAD_DIR = "downloads"
 
 class VersionFetchStrategy(ABC):
     @abstractmethod
