@@ -30,34 +30,32 @@ def load_config(filepath=CONFIG_FILE):
 
 def main():
     parser = argparse.ArgumentParser(description="Minecraft Server Management Utility")
-    parser.add_argument("--server", required=True, help="The name of the server configuration to use (as defined under 'servers' in config.yaml)")
-    parser.add_argument("--download_dir", help="Override default download directory")
+    parser.add_argument("--server", help="The name of the server configuration to use (as defined under 'servers' in config.yaml)")
     args = parser.parse_args()
 
+    download_directory = DEFAULT_DOWNLOAD_DIRECTORY
     servers_config = load_config()
-    server_name = args.server
 
-    if server_name in servers_config:
+    if args.server:
+        server_name = args.server
+        if server_name not in servers_config:
+            print(f"Error: Server configuration '{server_name}' not found in {CONFIG_FILE} under the 'servers' section.")
+            sys.exit(1)
+
         server_settings = servers_config[server_name]
-
-        download_directory = args.download_dir or server_settings.get('download_directory', DEFAULT_DOWNLOAD_DIRECTORY)
+        server_download_directory = server_settings.get('download_directory')
         server_directory = server_settings.get('server_directory')
         backup_directory = server_settings.get('backup_directory')
         screen_name = server_settings.get('screen_name', 'minecraft')
         exclude_backup = server_settings.get('backup_exclude', [])
 
-        if server_directory and backup_directory:
-            backup_files(server_directory, backup_directory, screen_name, exclude_backup)
-        else:
-            print(f"Warning: 'server_directory' or 'backup_directory' not defined for server '{server_name}' in {CONFIG_FILE}. Skipping backup.")
+        download_directory = server_download_directory
+        backup_files(server_directory, backup_directory, screen_name, exclude_backup)
 
-        download_paper(download_directory)
-        download_geyser(download_directory)
-        download_floodgate(download_directory)
-
-    else:
-        print(f"Error: Server configuration '{server_name}' not found in {CONFIG_FILE} under the 'servers' section.")
-        sys.exit(1)
+    print(f"--- Downloading server files to: {download_directory} ---")
+    download_paper(download_directory)
+    download_geyser(download_directory)
+    download_floodgate(download_directory)
 
 def download_floodgate(download_directory):
     print("\n--- Checking and Downloading Latest Floodgate ---")

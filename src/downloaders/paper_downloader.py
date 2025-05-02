@@ -19,12 +19,14 @@ class LatestVersionStrategy(VersionFetchStrategy):
     def get_version_and_build(self):
         url = f"{BASE_URL}/projects/{PROJECT}"
         try:
+            print(f"Getting versions from {url}")
             response = requests.get(url)
             response.raise_for_status()
             data = response.json()
             latest_version = data['versions'][-1] if data['versions'] else None
             if latest_version:
                 url_version = f"{BASE_URL}/projects/{PROJECT}/versions/{latest_version}"
+                print(f"Getting builds from {url_version}")
                 response_version = requests.get(url_version)
                 response_version.raise_for_status()
                 version_data = response_version.json()
@@ -39,6 +41,7 @@ class StableVersionStrategy(VersionFetchStrategy):
     def get_version_and_build(self):
         url_projects = f"{BASE_URL}/projects/{PROJECT}"
         try:
+            print(f"Getting versions from {url_projects}")
             response_projects = requests.get(url_projects)
             response_projects.raise_for_status()
             project_data = response_projects.json()
@@ -49,6 +52,7 @@ class StableVersionStrategy(VersionFetchStrategy):
 
             for version in reversed(versions):
                 url_version = f"{BASE_URL}/projects/{PROJECT}/versions/{version}"
+                print(f"Getting builds from {url_version}")
                 response_version = requests.get(url_version)
                 response_version.raise_for_status()
                 version_data = response_version.json()
@@ -59,6 +63,7 @@ class StableVersionStrategy(VersionFetchStrategy):
 
                 latest_build_number = builds[-1]
                 url_build = f"{BASE_URL}/projects/{PROJECT}/versions/{version}/builds/{latest_build_number}"
+                print(f"Getting build from {url_build}")
                 response_build = requests.get(url_build)
                 response_build.raise_for_status()
                 build_data = response_build.json()
@@ -80,10 +85,12 @@ class StableVersionStrategy(VersionFetchStrategy):
         cache = PaperDownloader._load_cache_static()
         cache_key = f"{version}-{build_number}"
         if cache_key in cache:
+            print(f"Found cached version for {cache_key}")
             return cache[cache_key]
 
         url_build = f"{BASE_URL}/projects/{PROJECT}/versions/{version}/builds/{build_number}"
         try:
+            print(f"Getting build from {url_build}")
             response_build = requests.get(url_build)
             response_build.raise_for_status()
             build_data = response_build.json()
@@ -124,6 +131,7 @@ class PaperDownloader:
 
         url_build = f"{BASE_URL}/projects/{PROJECT}/versions/{version}/builds/{build_number}"
         try:
+            print(f"Getting build from {url_build}")
             response_build = requests.get(url_build)
             response_build.raise_for_status()
             build_data = response_build.json()
