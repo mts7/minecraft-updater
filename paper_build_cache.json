@@ -1351,5 +1351,49 @@
                 "sha256": "74ff2d5f102d2cd144c30b2c5697e5c2b31534c2eebca26d5576be4af1b06d55"
             }
         }
+    },
+    "1.21.5-60": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 60,
+        "time": "2025-05-02T18:50:45.681Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "93246a07308c73630db4708780c244e3558b819f",
+                "summary": "Fix errors when loading raid files without a PDC",
+                "message": "Fix errors when loading raid files without a PDC\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-60.jar",
+                "sha256": "ef10bec4a755923d58fc6f4444652f3d9823017cf7b350e4a40534b85dbd0740"
+            }
+        }
+    },
+    "1.21.5-59": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 59,
+        "time": "2025-05-02T17:02:29.977Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "51345a1cc84f21af20c80a79906905d73ba1b385",
+                "summary": "Correct nullable fall location type",
+                "message": "Correct nullable fall location type\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-59.jar",
+                "sha256": "45c63efe065a6ee9f0a261800f2700589e0dc3a3d4f69d3425608ed9c15401ca"
+            }
+        }
     }
 }

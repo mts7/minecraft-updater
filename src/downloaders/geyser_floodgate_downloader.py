@@ -2,12 +2,16 @@ from typing import Optional
 
 from downloaders.geysermc_downloader import GeyserMcDownloader
 
+
 class FloodgateDownloader(GeyserMcDownloader):
-    API_BASE_URL_V2_LATEST: str = "https://download.geysermc.org/v2/projects/floodgate/versions/latest/builds/latest"
+    API_BASE_URL_V2_LATEST: str = (
+        "https://download.geysermc.org/v2/projects/floodgate"
+        "/versions/latest/builds/latest"
+    )
     PROJECT: str = "floodgate"
     DOWNLOAD_SUBPATH: str = "spigot"
     DEFAULT_DOWNLOAD_DIR: str = "floodgate_downloads"
-    FILENAME_PATTERN: str = "Floodgate-Spigot-*-SNAPSHOT.jar" # Assuming a pattern
+    FILENAME_PATTERN: str = "Floodgate-Spigot-*-SNAPSHOT.jar"
 
     def __init__(self, download_directory=DEFAULT_DOWNLOAD_DIR):
         super().__init__(download_directory)
@@ -19,4 +23,3 @@ class FloodgateDownloader(GeyserMcDownloader):
             download_subpath=self.DOWNLOAD_SUBPATH,
             filename_pattern=self.FILENAME_PATTERN,
         )
-
