@@ -1,7 +1,7 @@
-from minecraft_updater.spigotmc_downloader import SpigotMCPluginDownloader
+from downloaders.spigotmc_downloader import SpigotMCPluginDownloader
 
 class ViaVersionDownloader(SpigotMCPluginDownloader):
-    SPIGOTMC_URL = "https://www.spigotmc.org/resources/viaversion.19254/"
+    SPIGOTMC_URL = "https://www.spigotmc.org/resources/viaversion.19254/history"
     DEFAULT_DOWNLOAD_DIR = "viaversion_downloads"
     FILENAME = "ViaVersion.jar"
 

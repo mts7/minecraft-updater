@@ -1,0 +1,1333 @@
+{
+    "1.21.5-24": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 24,
+        "time": "2025-04-21T18:32:52.887Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "04b91129a5c41083901caef5a55677bdb8406065",
+                "summary": "Update projects dependents GitHub Action (#12436)",
+                "message": "Update projects dependents GitHub Action (#12436)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-24.jar",
+                "sha256": "119139d2f2f7041f08dad48fa0734b0f0c472a2158445a9f886cf350c46eb14f"
+            }
+        }
+    },
+    "1.21.5-23": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 23,
+        "time": "2025-04-19T19:59:07.690Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "5f0b82925e06c90400b4069631b15c8f2c47c76d",
+                "summary": "Re-add chunk position check to regionfile recalculation patch",
+                "message": "Re-add chunk position check to regionfile recalculation patch\n"
+            },
+            {
+                "commit": "89cdcba5730ae2197b32788f8c3bf1aa9f472531",
+                "summary": "[ci skip] Replace wiki mention for BlockType#isOccluding (#12446)",
+                "message": "[ci skip] Replace wiki mention for BlockType#isOccluding (#12446)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-23.jar",
+                "sha256": "d133333c548113744ab6d850d73c0f1a9849f99413fba2239307780334783215"
+            }
+        }
+    },
+    "1.21.5-22": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 22,
+        "time": "2025-04-16T18:35:05Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "6c2b0378fe8c105dd9636ca8b4fa6b09b8dfa244",
+                "summary": "Use correct saved data key for maps",
+                "message": "Use correct saved data key for maps\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-22.jar",
+                "sha256": "a95ea5f1984712d1add7fc1e5fec652fb9a8846285e5c8c89af59f28835489d8"
+            }
+        }
+    },
+    "1.21.5-21": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 21,
+        "time": "2025-04-15T15:01:08.680Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "2948eb296d2b47e89cdf9a61b079e71251991eae",
+                "summary": "Mitigate an issue when loading a spigot config with null spam exclusion entries",
+                "message": "Mitigate an issue when loading a spigot config with null spam exclusion entries\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-21.jar",
+                "sha256": "8b2474daf2feb4d5f0eae58c1ff7b844a329c1fe4494747b8c92a7859da303a4"
+            }
+        }
+    },
+    "1.21.5-20": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 20,
+        "time": "2025-04-15T08:37:57.391Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "a55345f9911da8674139f1705641027ea97fa9b3",
+                "summary": "Add support for deserializing manually deserialized items, also add caller note",
+                "message": "Add support for deserializing manually deserialized items, also add caller note\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-20.jar",
+                "sha256": "581ccc53e38596a96a24f81130bc0b883db6175bc7eea75f980620a60d2b7cea"
+            }
+        }
+    },
+    "1.21.5-19": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 19,
+        "time": "2025-04-14T20:17:29.600Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "c0bd5688b53672eeeb63ed19ec76af2e2dc629b9",
+                "summary": "Add logic for Human canUseEquipmentSlot (#12433)",
+                "message": "Add logic for Human canUseEquipmentSlot (#12433)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-19.jar",
+                "sha256": "d47f9f8b83a1d515c8247f83ab03bdfaf749373b6b124f3794c83fca67ee7527"
+            }
+        }
+    },
+    "1.21.5-18": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 18,
+        "time": "2025-04-14T17:49:24.961Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "6b4ad082593ab8e0e52501badacc38df58dbab92",
+                "summary": "Add PlayerRespawnEvent#isMissingRespawnBlock (#12422)",
+                "message": "Add PlayerRespawnEvent#isMissingRespawnBlock (#12422)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-18.jar",
+                "sha256": "904d2b80b65e3d907ea57ae6a27d70d7d7bfa4d4ea30949b6621a6bcece5c616"
+            }
+        }
+    },
+    "1.21.5-17": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 17,
+        "time": "2025-04-14T16:37:44.288Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "ed322043d00290213ebfefd0bd022ce28a9538cc",
+                "summary": "Clone blockpos in InsideBlockEffectApplier record",
+                "message": "Clone blockpos in InsideBlockEffectApplier record\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-17.jar",
+                "sha256": "99e97d515a0103469b29458487442b5338d07d9069fb24fe411871524fed9d60"
+            }
+        }
+    },
+    "1.21.5-16": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 16,
+        "time": "2025-04-14T15:37:33.626Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "723b511fe1fdd74e5bbf73d8fadbfe2734591cfd",
+                "summary": "Clone exit location passed to teleport event (#12354)",
+                "message": "Clone exit location passed to teleport event (#12354)\n\nThe exit location passed to PlayerTeleportEvent/PlayerTeleportEndGatewayEvent in ServerPlayer#teleport(TeleportTransition) needs to be cloned, as it is later compared in case it was changed. Not cloning it results in the ability for plugins to mutate it but such changes will be ignored, as the instance of the Location being the same results in a successful equality check.\n\nIt is not necessary to clone the location in other instantiations of the event (or subclasses) as those are not compared afterwards to change the outcome."
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-16.jar",
+                "sha256": "78364d1841243b73b60d4bcfb08932cc798925a3a80368ef182ddacbf3142622"
+            }
+        }
+    },
+    "1.21.5-15": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 15,
+        "time": "2025-04-14T15:31:00.312Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "33e8928f537678ec963c89b4ea7d05f0fa08cd8a",
+                "summary": "Add support for bonus chest configuration in WorldCreator (#12344)",
+                "message": "Add support for bonus chest configuration in WorldCreator (#12344)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-15.jar",
+                "sha256": "a45da0cf59d029f48349a034241e44ec4ea91fa224e0d2c1ae009d2666a51729"
+            }
+        }
+    },
+    "1.21.5-14": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 14,
+        "time": "2025-04-14T15:10:51.453Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "de410d13ef18d429d98549924be5431e6ce14b26",
+                "summary": "Fix reobf mappings regression in GameRules.Type (#12437)",
+                "message": "Fix reobf mappings regression in GameRules.Type (#12437)\n\nThe recent commit 121a7bf4ebd42beb9285a694039c2868b4148b07 added\nthe interface FeatureElement to the GameRules.Type class to expose the\nstored feature flags of gamerules.\nThis however messed with the reobf mappings spigot uses, as the now\noverridden method requiredFeatures needs to be mapped to the same\nobfuscated name as FeatureElement#requiredFeatures.\n\nTo avoid having this in the mappings patch, the commit removes the\ninheritance again and instead exposes a wrapper method."
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-14.jar",
+                "sha256": "5942c6fb17d1629a41df7157866c26c25390dd9e45c851d5d898324360d12c56"
+            }
+        }
+    },
+    "1.21.5-13": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 13,
+        "time": "2025-04-14T11:35:34.600Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "7d5695d7745ef05b4cad5e089d54b8d217b000f7",
+                "summary": "Improve ItemMeta#hasCustomModelData compatibility (#12414)",
+                "message": "Improve ItemMeta#hasCustomModelData compatibility (#12414)\n\nPorts the follow commits from spigot to paper.\nAll credits to go the respective commit authors listed below.\n\nBukkit: 47480cd07c0957a94b220f3087b851594b063e54\nCraftBukkit: c6c8165aa0d5679b9b015b209c1645a222f8c3a6\nCraftBukkit: d275d3b96e041f6421f3bb7de1e6022ea8be5456\n\nBy: md_5 <git@md-5.net>\nBy: Doc <nachito94@msn.com>"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-13.jar",
+                "sha256": "2f2d6b047893a5e71496cb7f0c3e69bfedf93713bf09af24dbb04de66fc84024"
+            }
+        }
+    },
+    "1.21.5-12": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 12,
+        "time": "2025-04-14T11:27:45.114Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "121a7bf4ebd42beb9285a694039c2868b4148b07",
+                "summary": "Make GameRule a FeatureDependant (#12429)",
+                "message": "Make GameRule a FeatureDependant (#12429)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-12.jar",
+                "sha256": "327981be7efdd11d08592ec40ab1357b5bbb099fd23f4618b532eb731518cdc2"
+            }
+        }
+    },
+    "1.21.5-11": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 11,
+        "time": "2025-04-14T09:55:12.900Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "91bfb6fb7e7106fe6bd02b7131d5b5adcb476846",
+                "summary": "Fix freeze locked (#12434)",
+                "message": "Fix freeze locked (#12434)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-11.jar",
+                "sha256": "c0dd3863f3694cae0940c9fef787d5c31499225c7bca421f3c5c1e55de2766b0"
+            }
+        }
+    },
+    "1.21.5-10": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 10,
+        "time": "2025-04-14T09:37:19.962Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "dcb755acc6a22a1476fe472cd749f6c20c91bc6c",
+                "summary": "Update log4j jd link No longer available on javadoc.io apparently after 2.20.0",
+                "message": "Update log4j jd link\nNo longer available on javadoc.io apparently after 2.20.0\n"
+            },
+            {
+                "commit": "79036210c185eb685da2deddd8200982226bded0",
+                "summary": "Remove json-simple imports from API, keep it as implementation in server",
+                "message": "Remove json-simple imports from API, keep it as implementation in server\n"
+            },
+            {
+                "commit": "8ff94c63443cdc61f4b3e8ae8ea29a05a827b73d",
+                "summary": "Update a bunch of dependencies Either to match Vanilla or to update our own",
+                "message": "Update a bunch of dependencies\nEither to match Vanilla or to update our own\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-10.jar",
+                "sha256": "c35f528b4e9bd7ba26c748f6ddca16d59c6668822cc0ffe8efc4e4752ab8710c"
+            }
+        }
+    },
+    "1.21.5-8": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 8,
+        "time": "2025-04-14T08:25:05.151Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "1b889688a5861b7770970b75c6b7183ba7f22164",
+                "summary": "Add Entity#isTrackedBy (#12332)",
+                "message": "Add Entity#isTrackedBy (#12332)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-8.jar",
+                "sha256": "18c4f5359cad6205b14b6ef33b71e3b084411ef50a365a1d25299199913f7654"
+            }
+        }
+    },
+    "1.21.5-7": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 7,
+        "time": "2025-04-14T07:25:37.362Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "de64e70458ee05f6a34c9c9e2129176a4b360f9a",
+                "summary": "Update spark",
+                "message": "Update spark\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-7.jar",
+                "sha256": "8a7233abe7893eb362fbe35c984a7dbc1c022f30840af1c42b44d3295bf6df36"
+            }
+        }
+    },
+    "1.21.5-6": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 6,
+        "time": "2025-04-14T07:07:24.011Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "652cea57e8eb4238287f0e091cda3ec2370711a4",
+                "summary": "Allow `getAsString()`-ing non-persistent entities (#12424)",
+                "message": "Allow `getAsString()`-ing non-persistent entities (#12424)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-6.jar",
+                "sha256": "7d7c89710e10e7124cfd25d1f0e2810ff5c89f288fe2233e6c42a225ba96c9b6"
+            }
+        }
+    },
+    "1.21.5-5": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 5,
+        "time": "2025-04-13T09:56:29.043Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "8f62e0fb3158817d412ee7f6aa901c00b0966623",
+                "summary": "Correctly order getArmorContents",
+                "message": "Correctly order getArmorContents\n\nMojangs EQUIPMENT_SLOT_MAPPING uses an Int2ObjectArrayMap and hence\ntechnically does provide iteration stability, however it is filled from\na MapN, which destroys the well order of the entries.\nTo iterate from smallest to largest inventory index correctly, this\ncommit introduces a sorted array based on the EQUIPMENT_SLOT_MAPPING.\n"
+            },
+            {
+                "commit": "4511edb84951d8b7251f288bfa2c6c3f90d47c68",
+                "summary": "[ci skip] Don't promote checking enchantment by legacy lore (#12421)",
+                "message": "[ci skip] Don't promote checking enchantment by legacy lore (#12421)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-5.jar",
+                "sha256": "668ff573fabc358fcd58d4cfe6e9c16e379a6d80ce60750f4e65565af1fecb48"
+            }
+        }
+    },
+    "1.21.5-4": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 4,
+        "time": "2025-04-12T17:51:14.726Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "f517267c0cde36a82419ebe04038d77424779acc",
+                "summary": "Add passthrough for air serialization",
+                "message": "Add passthrough for air serialization\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-4.jar",
+                "sha256": "a32552c49a93009c22237fbbdc353ec7b0b759c09d8518bd8d7dc8f9195c82cf"
+            }
+        }
+    },
+    "1.21.5-3": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 3,
+        "time": "2025-04-12T17:19:34.166Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "93b6829e834cb375781ed62e8bd8ce2b6a77db70",
+                "summary": "Also fix AbstractHorse getSize and isEmpty",
+                "message": "Also fix AbstractHorse getSize and isEmpty\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-3.jar",
+                "sha256": "dada940c60602e19195dfe39cad36b82bd836b59a4989a016cbe889adef77d90"
+            }
+        }
+    },
+    "1.21.5-2": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 2,
+        "time": "2025-04-12T17:05:45.074Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "8eede4bb8a394f5c1d20f4f1a47232db6321b987",
+                "summary": "Fix AbstractHorse get/setSaddle Fixes #12412",
+                "message": "Fix AbstractHorse get/setSaddle\nFixes #12412\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-2.jar",
+                "sha256": "0cfa1005adb8de8328e9392591e6657688e0d019516aa3addc9f27f4a65c231c"
+            }
+        }
+    },
+    "1.21.5-1": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 1,
+        "time": "2025-04-12T15:39:32.527Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "f00727c57e564f3a8cb875183a54142feb693db7",
+                "summary": "1.21.5",
+                "message": "1.21.5\n\nCo-authored-by: Bjarne Koll <git@lynxplay.dev>\nCo-authored-by: Jake Potrebic <jake.m.potrebic@gmail.com>\nCo-authored-by: Lulu13022002 <41980282+Lulu13022002@users.noreply.github.com>\nCo-authored-by: MiniDigger | Martin <admin@minidigger.dev>\nCo-authored-by: Nassim Jahnke <nassim@njahnke.dev>\nCo-authored-by: Noah van der Aa <ndvdaa@gmail.com>\nCo-authored-by: Owen1212055 <23108066+Owen1212055@users.noreply.github.com>\nCo-authored-by: Shane Freeder <theboyetronic@gmail.com>\nCo-authored-by: Spottedleaf <Spottedleaf@users.noreply.github.com>\nCo-authored-by: Tamion <70228790+notTamion@users.noreply.github.com>\nCo-authored-by: Warrior <50800980+Warriorrrr@users.noreply.github.com>\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-1.jar",
+                "sha256": "1cec8237f48a2a2c889aeb00ffb7a29f774ae5d62f95eb5e6f6fe5f113e369b7"
+            }
+        }
+    },
+    "1.21.4-226": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.4",
+        "build": 226,
+        "time": "2025-04-17T19:23:52.039Z",
+        "channel": "default",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "a838a886dcbc93664283034a41673e802a6b3098",
+                "summary": "Add PlayerRespawnEvent#isMissingRespawnBlock (#12422)",
+                "message": "Add PlayerRespawnEvent#isMissingRespawnBlock (#12422)\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.4-226.jar",
+                "sha256": "e2ecda9602718b3fca5d82939662526115e851a6f704f4ce6ac5a653a557e773"
+            }
+        }
+    },
+    "1.21.5-26": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 26,
+        "time": "2025-04-22T09:36:40.076Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "d22644aadac02cf7aab1c755788180ef151b69fd",
+                "summary": "Expand cooldown API (#12435)",
+                "message": "Expand cooldown API (#12435)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-26.jar",
+                "sha256": "7a45f5460d0537f59442626223a6f11627bbf89e4464cd80bdbaf3e08d125a2c"
+            }
+        }
+    },
+    "1.21.5-25": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 25,
+        "time": "2025-04-21T18:44:24.427Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "def0532ffcd44bb08dc87c89af505d460403658d",
+                "summary": "Fix writing headers and update to be more papery (#12459)",
+                "message": "Fix writing headers and update to be more papery (#12459)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-25.jar",
+                "sha256": "5681217c397bd629f5421787667dee81e7968b7430f5ad4556d25d51c5189f61"
+            }
+        }
+    },
+    "1.21.5-27": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 27,
+        "time": "2025-04-22T09:51:21.128Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "df429932caf97447417ef92695ee55db63c0f5ea",
+                "summary": "Fix floating warning log when the kick event is canceled (#12374)",
+                "message": "Fix floating warning log when the kick event is canceled (#12374)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-27.jar",
+                "sha256": "69f2ca087c6c98255676918200fcee6d86331970d41a7e0c50c73c14ca8a609a"
+            }
+        }
+    },
+    "1.21.5-45": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 45,
+        "time": "2025-04-29T13:50:11.253Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "a7a76c8fc7a585c74fde3adac703259ff69254d6",
+                "summary": "Add methods for Armadillo (#12031)",
+                "message": "Add methods for Armadillo (#12031)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-45.jar",
+                "sha256": "933ee2d35dc56c87fd38f21e961869fd5402ba35ecc2f88f68294d4fb60ba67e"
+            }
+        }
+    },
+    "1.21.5-44": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 44,
+        "time": "2025-04-29T13:44:22.417Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "fc0c3717610e90ea72e38c6fb1ee92e8331b4cc0",
+                "summary": "Fix handling of resultant crafting container from craftItemResult (#12307)",
+                "message": "Fix handling of resultant crafting container from craftItemResult (#12307)\n\nThe result object of overhanging items is based upon a derived view\nof the provided crafting slots, meaning that we need to consider this\nwhen handing back the resultant slots."
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-44.jar",
+                "sha256": "460964e61c0e3e673b97acfb1678219f9146b2551ed06e36e13db6545515489d"
+            }
+        }
+    },
+    "1.21.5-43": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 43,
+        "time": "2025-04-29T13:04:00.578Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "9e873f50d3b1d7f81596b1ec01fa9248276e77c2",
+                "summary": "Fix inconsistencies between offline/online spawn position getter (#11960)",
+                "message": "Fix inconsistencies between offline/online spawn position getter (#11960)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-43.jar",
+                "sha256": "2581cd65c4df3546941de6f0905239a6f3e60207f543dd7611a3ccba95569cc4"
+            }
+        }
+    },
+    "1.21.5-42": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 42,
+        "time": "2025-04-28T19:29:11.188Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "02d20ff7eb62ceae608ff8d0ed5f75516828e787",
+                "summary": "Fix NPE in Server#getMap before worlds are loaded (#12492)",
+                "message": "Fix NPE in Server#getMap before worlds are loaded (#12492)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-42.jar",
+                "sha256": "d2c7dc8f9374a20dacb2e61c69b9f1adafe91f42f72b213867b6dc327e478335"
+            }
+        }
+    },
+    "1.21.5-41": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 41,
+        "time": "2025-04-28T15:43:28.903Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "d1810f241cb8e7b24e7eb1d018f97d5af15ea9ea",
+                "summary": "Allow Server#getDefaultGameMode before worlds are initialized (#12490)",
+                "message": "Allow Server#getDefaultGameMode before worlds are initialized (#12490)\n\n"
+            },
+            {
+                "commit": "1db3785307e7e6e3cd64b69a4dca3c9a11a847aa",
+                "summary": "[ci skip] improve javadoc for off-hand swaps through getHotbarButton (#12489)",
+                "message": "[ci skip] improve javadoc for off-hand swaps through getHotbarButton (#12489)\n\n"
+            },
+            {
+                "commit": "952338b33eaaebcc164f54a08c67aeb6b20ceb5e",
+                "summary": "[ci skip] Add missing exception docs to Player#listPlayer (#12488)",
+                "message": "[ci skip] Add missing exception docs to Player#listPlayer (#12488)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-41.jar",
+                "sha256": "71747b203ba345bb939cccdacd8f222b7e73f416c92dd731b66a115e9ae168a2"
+            }
+        }
+    },
+    "1.21.5-40": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 40,
+        "time": "2025-04-27T12:25:41.634Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "b9d3147d3be6d8a35fc7fbf1fab922ec73a74636",
+                "summary": "Use correct placed block position for sound (#12410)",
+                "message": "Use correct placed block position for sound (#12410)\n\nPreviously the server attempted to compute the block placed by using the\nBlockPlaceContext. This approach however fails on replacable blocks, as\nthe BlockPlaceContext computes this during its construction, which\nhappened after the actual world modification.\n\nThe commit reworks this approach and now stores metadata in the\nInteractionResult which can later be read.\nThe diff is structured to allow for easy future expansion of the tracked\nmetadata."
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-40.jar",
+                "sha256": "7831772489abcec262c5559db3e8d1b7758013d0b59d6425bd9818dca10e99a5"
+            }
+        }
+    },
+    "1.21.5-39": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 39,
+        "time": "2025-04-27T12:18:53.490Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "f8fa4f6f5edb299d4769e475496154ea1221a3e1",
+                "summary": "Add method to retrieve FishHook (#12310)",
+                "message": "Add method to retrieve FishHook (#12310)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-39.jar",
+                "sha256": "4608f221ab1e2ee77fef9b096639e7d11a1b6f4af3da636362ac91da1fcd6410"
+            }
+        }
+    },
+    "1.21.5-38": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 38,
+        "time": "2025-04-26T21:33:18.639Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "3e3b42cdf5bbc99aa25080e60644c702e63c77f1",
+                "summary": "Update player chat session sync (#12382)",
+                "message": "Update player chat session sync (#12382)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-38.jar",
+                "sha256": "206755b0378bf8af13e6714afb57e651b2c4eb35b67799994580a232b246fe7c"
+            }
+        }
+    },
+    "1.21.5-37": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 37,
+        "time": "2025-04-26T14:42:27.013Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "f86b4352282d753a4f6bde405f5a242ec5b0ec95",
+                "summary": "Add vault change state event (#12069)",
+                "message": "Add vault change state event (#12069)\n\n"
+            },
+            {
+                "commit": "deaccd2c42a42ad6e47fd9597a78e9511496c949",
+                "summary": "[ci skip] Add file reference url to help.yml (#12481)",
+                "message": "[ci skip] Add file reference url to help.yml (#12481)\n\n"
+            },
+            {
+                "commit": "3222985e438261bd13d0b74e81d0e37158e083f1",
+                "summary": "[ci skip] Rebuild patches",
+                "message": "[ci skip] Rebuild patches\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-37.jar",
+                "sha256": "18452eecb2f8d6936c069363fea67199f4ad6ddd624c3a9ce718e7b90d63fb41"
+            }
+        }
+    },
+    "1.21.5-36": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 36,
+        "time": "2025-04-25T12:33:23.277Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "1cfc96bcf7bcce7c0215c9d0064d9b1d526fd9b0",
+                "summary": "Add keyStream() API to registries (#12479)",
+                "message": "Add keyStream() API to registries (#12479)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-36.jar",
+                "sha256": "f8196d86e4614ae24730e80a812916ca578724bd2363a41d92e67527c7717b51"
+            }
+        }
+    },
+    "1.21.5-35": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 35,
+        "time": "2025-04-25T09:30:25.303Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "3409e2d73fdb2ef5f1c6d7896a38f77919bfc6eb",
+                "summary": "Mace was not included in the ENCHANTABLE MaterialSetTag (#12476)",
+                "message": "Mace was not included in the ENCHANTABLE MaterialSetTag (#12476)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-35.jar",
+                "sha256": "cb78ef39aeb8521c8b23120fbabdf4e02a1e93caf7ca21a682283b53eaa3499b"
+            }
+        }
+    },
+    "1.21.5-34": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 34,
+        "time": "2025-04-25T08:59:57.146Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "ae512811db82f5bfdab33cd96aefb66150d9015e",
+                "summary": "Add isSuffocating to Block and BlockState (#12445)",
+                "message": "Add isSuffocating to Block and BlockState (#12445)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-34.jar",
+                "sha256": "8e46bbc7847bdd4d4bedf7db771aed791c2974b4e41040cdcbc42528f349ddfc"
+            }
+        }
+    },
+    "1.21.5-33": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 33,
+        "time": "2025-04-25T08:52:39.097Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "a211ac2ec5cdbcdff98d6aa46eb95a87c2ca3475",
+                "summary": "Remove unused warning (#12478)",
+                "message": "Remove unused warning (#12478)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-33.jar",
+                "sha256": "802a663fddde00d66ff58606745f20933ee8087b651492bdfd94af5dbaaa1a67"
+            }
+        }
+    },
+    "1.21.5-32": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 32,
+        "time": "2025-04-24T20:45:09.661Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "a112d370253a47b53721f290dcc74a28ce2d6d2e",
+                "summary": "Fix horse_variant and tropical_fish_pattern (#12472)",
+                "message": "Fix horse_variant and tropical_fish_pattern (#12472)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-32.jar",
+                "sha256": "22b2d85508fbc12f9bc984bc25b0cfc79f6d3eebab36cf34532f2726ce413e73"
+            }
+        }
+    },
+    "1.21.5-31": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 31,
+        "time": "2025-04-24T16:15:11.911Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "9cddf136d78aa9293b3a7fbc426922785a42bfa8",
+                "summary": "Fix portal create event block list (#12373)",
+                "message": "Fix portal create event block list (#12373)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-31.jar",
+                "sha256": "7080e51ba81631ff8d4d2611e94a3293c286f51a099029bc9a542e82d6dc1439"
+            }
+        }
+    },
+    "1.21.5-30": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 30,
+        "time": "2025-04-24T15:02:51.646Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "767868ddbf7667f2c8c587f1947d5110dccb22e3",
+                "summary": "Fix some components (#12457)",
+                "message": "Fix some components (#12457)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-30.jar",
+                "sha256": "9393532a5ed8a4919cc5cb2056f97e89953cb8cd73c46e73220ef7d476912c22"
+            }
+        }
+    },
+    "1.21.5-29": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 29,
+        "time": "2025-04-24T12:07:49.093Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "1410a22bb205c0868d03e305242799b4bd791225",
+                "summary": "Fix passengers sending when riding players Fixes #12468",
+                "message": "Fix passengers sending when riding players\nFixes #12468\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-29.jar",
+                "sha256": "7fb820b910a13a33d6c6b20a827817f69bd612df4d1a326c10f7c2f8e9256735"
+            }
+        }
+    },
+    "1.21.5-28": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 28,
+        "time": "2025-04-22T20:14:27.435Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "55f20209262cb196976e18d155551fb13c3d1554",
+                "summary": "Fix CCE in LingeringPotionSplashEvent (#12463)",
+                "message": "Fix CCE in LingeringPotionSplashEvent (#12463)\n\n"
+            },
+            {
+                "commit": "a820bdaeb9923ebeeab42259fcb071b65e72ee58",
+                "summary": "[ci skip] Some javadoc fixes",
+                "message": "[ci skip] Some javadoc fixes\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-28.jar",
+                "sha256": "9039abe28484a1b6b3b8354bfa60eca844c3170c6fe9672b818ff03c15e064aa"
+            }
+        }
+    },
+    "1.21.4-227": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.4",
+        "build": 227,
+        "time": "2025-04-28T19:14:44.561Z",
+        "channel": "default",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "76753219c42b58611b5855c14a50661bcfc47026",
+                "summary": "Allow Server#getDefaultGameMode before worlds are initialized (#12491)",
+                "message": "Allow Server#getDefaultGameMode before worlds are initialized (#12491)\n\nBackport-Of: d1810f241cb8e7b24e7eb1d018f97d5af15ea9ea"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.4-227.jar",
+                "sha256": "3b7e16b9fc70365075ed08618e9686794137769d2538f3071c70a502472112cc"
+            }
+        }
+    },
+    "1.21.5-55": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 55,
+        "time": "2025-05-01T14:07:13.767Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "c9411bfb83075d92fbdb74b794e937b59f198716",
+                "summary": "Fix min ItemStack amount check for asHoverEvent (#12505)",
+                "message": "Fix min ItemStack amount check for asHoverEvent (#12505)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-55.jar",
+                "sha256": "f6726d933a4168765a6337f72d734d79cbf180d9ec82ae4a68387079fb7c05df"
+            }
+        }
+    },
+    "1.21.5-54": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 54,
+        "time": "2025-05-01T01:49:41.632Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "835b9559134bb6e05cc61a917c7a4c0ebe00ffab",
+                "summary": "Add a method on InventoryView to get the MenuType (#12193)",
+                "message": "Add a method on InventoryView to get the MenuType (#12193)\n\nSince there is a new (better) way to create views for players using MenuType, it would be nice to also be able to get it back from InventoryView after creating."
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-54.jar",
+                "sha256": "7df05ed1e87f9fc0986f5ecdcabf07b4dd81be8fb6ae967c4c5e6ef7af719691"
+            }
+        }
+    },
+    "1.21.5-53": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 53,
+        "time": "2025-05-01T01:33:38.442Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "0e9b94d533f195cb0654ab2b5a9746713769467e",
+                "summary": "Fix ItemStack amount issues with Chat Components (#12216)",
+                "message": "Fix ItemStack amount issues with Chat Components (#12216)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-53.jar",
+                "sha256": "2c0ebbe1601c9117946b169103a066cc8a5d4b7d5df5a0236b09eb896bc880b0"
+            }
+        }
+    },
+    "1.21.5-52": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 52,
+        "time": "2025-05-01T01:26:58.920Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "bc3d946fdfaaff540118b98f0b35dadaacfade00",
+                "summary": "Normalizes CraftEntity#toString/getHandle (#12170)",
+                "message": "Normalizes CraftEntity#toString/getHandle (#12170)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-52.jar",
+                "sha256": "8412cd6ead7af381792d62273ca6fdfe54bdb8bf26c097115a9ddd7f7ef27676"
+            }
+        }
+    },
+    "1.21.5-51": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 51,
+        "time": "2025-04-30T18:15:14.039Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "567f63ae3451d8232fe4c76a12cce0c0cb139d80",
+                "summary": "Parity for respawn events (#11792)",
+                "message": "Parity for respawn events (#11792)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-51.jar",
+                "sha256": "1d10764aad2993cd42405ab535f3f272b906b35c2a2909af5a86a2ab00541504"
+            }
+        }
+    },
+    "1.21.5-50": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 50,
+        "time": "2025-04-30T18:08:54.708Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "2754d7c3b92e8fe5b04fde42fc62fc44c7737bff",
+                "summary": "Add Throw EntityChangeBlockEvent for BrushableBlockEntity#brush (#12133)",
+                "message": "Add Throw EntityChangeBlockEvent for BrushableBlockEntity#brush (#12133)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-50.jar",
+                "sha256": "9eee2431c9e5e78761bd4e290b8655bc5b9145bd9cafaa1424fa1b83b2a0c0c1"
+            }
+        }
+    },
+    "1.21.5-49": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 49,
+        "time": "2025-04-30T17:59:48.709Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "5acfdd6af4b4da901a32dc845b881985028fdce2",
+                "summary": "Fix save/load NaN Entity Motion (#12269)",
+                "message": "Fix save/load NaN Entity Motion (#12269)\n\n"
+            },
+            {
+                "commit": "cd4fe5b7d06a6b2b08e462318534c8951d22ae43",
+                "summary": "[ci skip] Drop non-applicable ATs (#12498)",
+                "message": "[ci skip] Drop non-applicable ATs (#12498)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-49.jar",
+                "sha256": "c7829bd5275585a23230e3460d251d2070870388cbabc4cb9e9de1c4f95da103"
+            }
+        }
+    },
+    "1.21.5-48": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 48,
+        "time": "2025-04-30T17:30:57.757Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "e663f9998200bada01bea7b82316f120b8cc5e62",
+                "summary": "Add combat tracker API (#11853)",
+                "message": "Add combat tracker API (#11853)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-48.jar",
+                "sha256": "9109a24e205e20103d1130368384fbf051a4207509906e93cc405a75fd3ed246"
+            }
+        }
+    },
+    "1.21.5-47": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 47,
+        "time": "2025-04-30T15:56:43.352Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "646b80ca535684620300117636e5cd5ae78e2da1",
+                "summary": "Fix unnecessary map data saves (#12296)",
+                "message": "Fix unnecessary map data saves (#12296)\n\n"
+            },
+            {
+                "commit": "1e930763d226ea771151d67ae8cacc85e92ad085",
+                "summary": "Fix ipv6 loopback addresses being able to get connection throttled (#12155)",
+                "message": "Fix ipv6 loopback addresses being able to get connection throttled (#12155)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-47.jar",
+                "sha256": "47a9f5b58b9dfd68ac7bee3bd390a55c16b808a98adf92ef62a1c99ec60bc47b"
+            }
+        }
+    },
+    "1.21.5-46": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 46,
+        "time": "2025-04-30T09:43:56.675Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "a74400d92c11ba2c9d117fc475afdc51c1c6f422",
+                "summary": "Update adventure to 4.21.0 (#12499)",
+                "message": "Update adventure to 4.21.0 (#12499)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-46.jar",
+                "sha256": "3c66beaad6897c3ce6f7716d6a7290088ddd08b9f886ae44774eaa042a27ab81"
+            }
+        }
+    },
+    "1.21.5-57": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 57,
+        "time": "2025-05-02T00:18:17.749Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "b9b3cd652e1b106fd7feddc1429725a26f6c8252",
+                "summary": "Use components instead of ChatColor in more places  (#12507)",
+                "message": "Use components instead of ChatColor in more places  (#12507)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-57.jar",
+                "sha256": "56cc3fa170607f14280e728c55bf9d5e81b2bc2a6e54fa69314fb3c5e583cf0f"
+            }
+        }
+    },
+    "1.21.5-56": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 56,
+        "time": "2025-05-01T14:14:57.387Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "1acf3b3837327b658b3c70a2c4e346c4dc1de2e5",
+                "summary": "Infer block entity data in brigadier blockstate argument (#12197)",
+                "message": "Infer block entity data in brigadier blockstate argument (#12197)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-56.jar",
+                "sha256": "e1416c3400b1834cb5c58f442458b06b10e0b47eba6d2c43c31023ea418b094b"
+            }
+        }
+    }
+}

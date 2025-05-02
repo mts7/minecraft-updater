@@ -16,8 +16,13 @@ class SpigotMCPluginDownloader:
         self.SPIGOTMC_URL = spigotmc_url
 
     def _fetch_download_url(self):
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            'Referer': 'https://www.spigotmc.org/',
+            'Accept-Language': 'en-US,en;q=0.9'
+        }
         try:
-            response = requests.get(self.SPIGOTMC_URL)
+            response = requests.get(self.SPIGOTMC_URL, headers=headers)
             response.raise_for_status()
             soup = BeautifulSoup(response.content, 'html.parser')
             download_link_element = soup.find('a', {'class': 'inner'})
