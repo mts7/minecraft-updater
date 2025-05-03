@@ -21,7 +21,7 @@ class GeyserMcDownloader:
     PROJECT: str = ""
     DOWNLOAD_SUBPATH: str = ""
     DEFAULT_DOWNLOAD_DIR: str = ""
-    FILENAME_PATTERN: Optional[str] = None  # Add a pattern attribute
+    FILENAME_PATTERN: Optional[str] = None
 
     def __init__(self, download_directory: str) -> None:
         self.download_directory: str = download_directory
@@ -64,7 +64,6 @@ class GeyserMcDownloader:
                               .get(self.DOWNLOAD_SUBPATH, {})
                               .get('name', f"{self.PROJECT}-latest.jar"))
             base, ext = os.path.splitext(base_name)
-            # Construct the filename using base, version, build, and extension
             constructed_filename: str = f"{base}-v{version}-b{build}{ext}"
 
             if "*" not in pattern and "-SNAPSHOT" not in pattern:
@@ -109,7 +108,7 @@ class GeyserMcDownloader:
                 raise FileAccessError(
                     f"Operating system error accessing file: {filepath}",
                     original_exception=e, filepath=filepath) from e
-            except HashCalculationError:  # Re-raise our custom hash error
+            except HashCalculationError:
                 raise
             except Exception as e:
                 raise FileAccessError(

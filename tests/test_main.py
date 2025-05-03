@@ -60,10 +60,8 @@ def test_download_and_backup_successful_run(tmp_path):
             mock_print as mocked_print:
         download_and_backup(server_name, servers_config)
 
-        # Assert that download_server_files was called with the correct directory
         mocked_download.assert_called_once_with(str(tmp_path / "dl"))
 
-        # Assert that perform_backup_if_needed was called with the correct arguments
         mocked_backup.assert_called_once_with(
             servers_config[server_name], "paper.jar", "geyser.jar",
             "floodgate.jar"
@@ -120,19 +118,14 @@ def test_download_floodgate_calls_downloader(tmp_path):
     """
     download_directory = str(tmp_path / "floodgate_downloads")
 
-    # Create a mock FloodgateDownloader instance
     mock_floodgate_downloader = MagicMock(spec=FloodgateDownloader)
 
-    # Patch the FloodgateDownloader class so that when it's instantiated,
-    # our mock instance is returned.
     with patch('main.FloodgateDownloader',
                return_value=mock_floodgate_downloader) as MockedFloodgateClass:
         download_floodgate(download_directory)
 
-        # Assert that FloodgateDownloader class was called to instantiate
         MockedFloodgateClass.assert_called_once_with(download_directory)
 
-        # Assert that download_latest was called on the mock instance
         mock_floodgate_downloader.download_latest.assert_called_once()
 
 
@@ -143,7 +136,6 @@ def test_download_floodgate_handles_downloader_errors(tmp_path):
     """
     download_directory = str(tmp_path / "floodgate_downloads")
 
-    # Create a mock FloodgateDownloader instance that raises an exception
     mock_floodgate_downloader = MagicMock(spec=FloodgateDownloader)
     mock_floodgate_downloader.download_latest.side_effect = Exception(
         "Download failed")
@@ -155,10 +147,8 @@ def test_download_floodgate_handles_downloader_errors(tmp_path):
         except Exception as e:
             assert str(e) == "Download failed"
 
-        # Assert that FloodgateDownloader class was called to instantiate
         MockedFloodgateClass.assert_called_once_with(download_directory)
 
-        # Assert that download_latest was called on the mock instance
         mock_floodgate_downloader.download_latest.assert_called_once()
 
 
@@ -169,19 +159,14 @@ def test_download_geyser_calls_downloader(tmp_path):
     """
     download_directory = str(tmp_path / "geyser_downloads")
 
-    # Create a mock GeyserDownloader instance
     mock_geyser_downloader = MagicMock(spec=GeyserDownloader)
 
-    # Patch the GeyserDownloader class so that when it's instantiated,
-    # our mock instance is returned.
     with patch('main.GeyserDownloader',
                return_value=mock_geyser_downloader) as MockedGeyserClass:
         download_geyser(download_directory)
 
-        # Assert that GeyserDownloader class was called to instantiate
         MockedGeyserClass.assert_called_once_with(download_directory)
 
-        # Assert that download_latest was called on the mock instance
         mock_geyser_downloader.download_latest.assert_called_once()
 
 
@@ -192,7 +177,6 @@ def test_download_geyser_handles_downloader_errors(tmp_path):
     """
     download_directory = str(tmp_path / "geyser_downloads")
 
-    # Create a mock GeyserDownloader instance that raises an exception
     mock_geyser_downloader = MagicMock(spec=GeyserDownloader)
     mock_geyser_downloader.download_latest.side_effect = Exception(
         "Download failed")
@@ -204,10 +188,8 @@ def test_download_geyser_handles_downloader_errors(tmp_path):
         except Exception as e:
             assert str(e) == "Download failed"
 
-        # Assert that GeyserDownloader class was called to instantiate
         MockedGeyserClass.assert_called_once_with(download_directory)
 
-        # Assert that download_latest was called (and raised an exception)
         mock_geyser_downloader.download_latest.assert_called_once()
 
 
@@ -218,19 +200,14 @@ def test_download_paper_calls_downloader(tmp_path):
     """
     download_directory = str(tmp_path / "paper_downloads")
 
-    # Create a mock PaperDownloader instance
     mock_paper_downloader = MagicMock(spec=PaperDownloader)
 
-    # Patch the PaperDownloader class so that when it's instantiated,
-    # our mock instance is returned.
     with patch('main.PaperDownloader',
                return_value=mock_paper_downloader) as MockedPaperClass:
         download_paper(download_directory)
 
-        # Assert that PaperDownloader class was called to instantiate
         MockedPaperClass.assert_called_once_with(download_directory)
 
-        # Assert that download was called on the mock instance
         mock_paper_downloader.download.assert_called_once()
 
 
@@ -241,7 +218,6 @@ def test_download_paper_handles_downloader_errors(tmp_path):
     """
     download_directory = str(tmp_path / "paper_downloads")
 
-    # Create a mock PaperDownloader instance that raises an exception
     mock_paper_downloader = MagicMock(spec=PaperDownloader)
     mock_paper_downloader.download.side_effect = Exception("Download failed")
 
@@ -252,10 +228,8 @@ def test_download_paper_handles_downloader_errors(tmp_path):
         except Exception as e:
             assert str(e) == "Download failed"
 
-        # Assert that PaperDownloader class was called to instantiate
         MockedPaperClass.assert_called_once_with(download_directory)
 
-        # Assert that download was called (and raised an exception)
         mock_paper_downloader.download.assert_called_once()
 
 
@@ -267,12 +241,10 @@ def test_download_server_files_calls_downloaders(tmp_path):
     """
     download_directory = str(tmp_path / "server_downloads")
 
-    # Create mock downloader instances
     mock_paper_downloader = MagicMock(spec=PaperDownloader)
     mock_geyser_downloader = MagicMock(spec=GeyserDownloader)
     mock_floodgate_downloader = MagicMock(spec=FloodgateDownloader)
 
-    # Patch the downloader classes
     with patch('main.PaperDownloader',
                return_value=mock_paper_downloader) as MockedPaperClass, \
             patch('main.GeyserDownloader',
@@ -281,12 +253,10 @@ def test_download_server_files_calls_downloaders(tmp_path):
                   return_value=mock_floodgate_downloader) as MockedFloodgateClass:
         download_server_files(download_directory)
 
-        # Assert that each downloader was instantiated with the correct directory
         MockedPaperClass.assert_called_once_with(download_directory)
         MockedGeyserClass.assert_called_once_with(download_directory)
         MockedFloodgateClass.assert_called_once_with(download_directory)
 
-        # Assert that the download methods were called
         mock_paper_downloader.download.assert_called_once()
         mock_geyser_downloader.download_latest.assert_called_once()
         mock_floodgate_downloader.download_latest.assert_called_once()
@@ -299,7 +269,6 @@ def test_download_server_files_returns_downloaded_filenames(tmp_path):
     """
     download_directory = str(tmp_path / "server_downloads")
 
-    # Create mock downloader instances with specific return values
     mock_paper_downloader = MagicMock(spec=PaperDownloader)
     mock_paper_downloader.download.return_value = "paper-1.20.jar"
     mock_geyser_downloader = MagicMock(spec=GeyserDownloader)
@@ -307,7 +276,6 @@ def test_download_server_files_returns_downloaded_filenames(tmp_path):
     mock_floodgate_downloader = MagicMock(spec=FloodgateDownloader)
     mock_floodgate_downloader.download_latest.return_value = "Floodgate-latest.jar"
 
-    # Patch the downloader classes
     with patch('main.PaperDownloader', return_value=mock_paper_downloader), \
             patch('main.GeyserDownloader',
                   return_value=mock_geyser_downloader), \
@@ -328,7 +296,6 @@ def test_download_server_files_handles_downloader_errors(tmp_path):
     """
     download_directory = str(tmp_path / "server_downloads")
 
-    # Create mock downloaders with side effects (raising exceptions)
     mock_paper_downloader = MagicMock(spec=PaperDownloader)
     mock_paper_downloader.download.side_effect = Exception(
         "Paper download failed")
@@ -339,7 +306,6 @@ def test_download_server_files_handles_downloader_errors(tmp_path):
     mock_floodgate_downloader.download_latest.side_effect = Exception(
         "Floodgate download failed")
 
-    # Patch the downloader classes
     with patch('main.PaperDownloader', return_value=mock_paper_downloader), \
             patch('main.GeyserDownloader',
                   return_value=mock_geyser_downloader), \
@@ -348,12 +314,10 @@ def test_download_server_files_handles_downloader_errors(tmp_path):
         paper_file, geyser_file, floodgate_file = download_server_files(
             download_directory)
 
-        # Assert that the function returns None for failed downloads
         assert paper_file is None
         assert geyser_file is None
         assert floodgate_file is None
 
-        # Assert that the download methods were called (even if they raised errors)
         mock_paper_downloader.download.assert_called_once()
         mock_geyser_downloader.download_latest.assert_called_once()
         mock_floodgate_downloader.download_latest.assert_called_once()
@@ -495,7 +459,6 @@ def test_load_config_raises_confignotfounderror_if_file_missing_no_example(capsy
     Tests that load_config raises ConfigNotFoundError and does not print
     example info when both config and example files are mocked as missing.
     """
-    # Use the constant directly
     with patch('os.path.exists') as mock_exists:
         def fake_exists(path):
             return path != CONFIG_FILE and path != EXAMPLE_CONFIG_FILE
@@ -636,7 +599,7 @@ def test_main_with_server_arg_valid_config():
     with patch('argparse.ArgumentParser.parse_args', return_value=argparse.Namespace(server=server_name)), \
             patch('main.load_config', mock_load_config), \
             patch('main.download_and_backup', mock_download_and_backup), \
-            patch('main.download_server_files'):  # Ensure the other path isn't called
+            patch('main.download_server_files'):
         main()
         mock_load_config.assert_called_once()
         mock_download_and_backup.assert_called_once_with(server_name, mock_servers_config)

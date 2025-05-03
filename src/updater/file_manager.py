@@ -91,10 +91,7 @@ class FileManager:
                                      server_dirname=server_dirname)
         except Exception as e:
             print(f"Error creating backup using tarfile: {e}")
-            # Optionally, you might want to re-raise the exception
-            # raise
         finally:
-            # It's good practice to change back to the original directory
             os.chdir(self.original_cwd)
 
     def _send_screen_command(self, screen_name: str, command: str) -> None:
