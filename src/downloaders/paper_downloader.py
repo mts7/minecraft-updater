@@ -4,7 +4,9 @@ import os
 from tqdm import tqdm
 import hashlib
 from abc import ABC, abstractmethod
-from typing import Tuple, Optional, Dict, Any
+from typing import Tuple, Optional, Dict, Any, List
+
+from src.exceptions import VersionInfoError, BuildDataError
 
 BASE_URL: str = "https://api.papermc.io/v2"
 PROJECT: str = "paper"
@@ -22,8 +24,7 @@ class LatestVersionStrategy(VersionFetchStrategy):
     def get_version_and_build(self) -> Tuple[Optional[str], Optional[int]]:
         url = f"{BASE_URL}/projects/{PROJECT}"
         try:
-            print(f"Getting versions from {url}")
-            response: requests.Response = requests.get(url)
+            response: requests.Response = requests.get(url, timeout=10)
             response.raise_for_status()
             data: Dict[str, Any] = response.json()
             latest_version: Optional[str] = None
@@ -34,8 +35,8 @@ class LatestVersionStrategy(VersionFetchStrategy):
                 url_version = (
                     f"{BASE_URL}/projects/{PROJECT}/versions/{latest_version}"
                 )
-                print(f"Getting builds from {url_version}")
-                response_version: requests.Response = requests.get(url_version)
+                response_version: requests.Response = requests.get(url_version,
+                                                                   timeout=10)
                 response_version.raise_for_status()
                 version_data: Dict[str, Any] = response_version.json()
                 latest_build: Optional[int] = None
@@ -49,19 +50,24 @@ class LatestVersionStrategy(VersionFetchStrategy):
 
             return None, None
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching latest version info: {e}")
-            return None, None
+            raise VersionInfoError(
+                f"Error fetching version info from {url}",
+                original_exception=e, url=url) from e
+        except json.JSONDecodeError as e:
+            raise VersionInfoError(
+                f"Error decoding JSON response from {url}",
+                original_exception=e, url=url) from e
 
 
 class StableVersionStrategy(VersionFetchStrategy):
     def get_version_and_build(self) -> Tuple[Optional[str], Optional[int]]:
         url_projects = f"{BASE_URL}/projects/{PROJECT}"
         try:
-            print(f"Getting versions from {url_projects}")
-            response_projects: requests.Response = requests.get(url_projects)
+            response_projects: requests.Response = requests.get(url_projects,
+                                                                timeout=10)
             response_projects.raise_for_status()
             project_data: Dict[str, Any] = response_projects.json()
-            versions: Optional[list[str]] = project_data.get('versions')
+            versions: Optional[List[str]] = project_data.get('versions')
 
             if not versions:
                 return None, None
@@ -70,37 +76,67 @@ class StableVersionStrategy(VersionFetchStrategy):
                 url_version = (
                     f"{BASE_URL}/projects/{PROJECT}/versions/{version}"
                 )
-                print(f"Getting builds from {url_version}")
-                response_version: requests.Response = requests.get(url_version)
-                response_version.raise_for_status()
-                version_data: Dict[str, Any] = response_version.json()
-                builds: Optional[list[int]] = version_data.get('builds')
+                try:
+                    response_version: requests.Response = requests.get(
+                        url_version, timeout=10)
+                    response_version.raise_for_status()
+                    version_data: Dict[str, Any] = response_version.json()
+                    builds: Optional[List[int]] = version_data.get('builds')
 
-                if not builds:
-                    continue
+                    if not builds:
+                        continue
 
-                latest_build_number: int = builds[-1]
-                url_build = (
-                    f"{BASE_URL}/projects/{PROJECT}/"
-                    "versions/{version}/builds/{latest_build_number}"
-                )
-                print(f"Getting build from {url_build}")
-                response_build: requests.Response = requests.get(url_build)
-                response_build.raise_for_status()
-                build_data: Optional[Dict[str, Any]] = response_build.json()
-                if build_data and build_data.get('channel') == 'default':
-                    return version, latest_build_number
+                    latest_build_number: int = builds[-1]
+                    url_build = (
+                        f"{BASE_URL}/projects/{PROJECT}/"
+                        f"versions/{version}/builds/{latest_build_number}"
+                    )
+                    try:
+                        response_build: requests.Response = requests.get(
+                            url_build, timeout=10)
+                        response_build.raise_for_status()
+                        build_data: Optional[
+                            Dict[str, Any]] = response_build.json()
+                        if build_data and build_data.get(
+                                'channel') == 'default':
+                            return version, latest_build_number
+                    except requests.exceptions.RequestException as e:
+                        raise VersionInfoError(
+                            "Error fetching build info for "
+                            f"version {version} from {url_build}",
+                            original_exception=e, url=url_build) from e
+                    except json.JSONDecodeError as e:
+                        raise VersionInfoError(
+                            "Error decoding build info JSON for "
+                            f"version {version} from {url_build}",
+                            original_exception=e, url=url_build) from e
 
-                for build_number in reversed(builds[:-1]):
-                    build_data = self._get_build_data_static(version,
-                                                             build_number)
-                    if build_data and build_data.get('channel') == 'default':
-                        return version, build_number
-
-            return None, None
+                    for build_number in reversed(builds[:-1]):
+                        build_data = self._get_build_data_static(version,
+                                                                 build_number)
+                        if build_data and build_data.get(
+                                'channel') == 'default':
+                            return version, build_number
+                except requests.exceptions.RequestException as e:
+                    raise VersionInfoError(
+                        "Error fetching version details for "
+                        f"{version} from {url_version}",
+                        original_exception=e, url=url_version) from e
+                except json.JSONDecodeError as e:
+                    raise VersionInfoError(
+                        "Error decoding version details JSON for "
+                        f"{version} from {url_version}",
+                        original_exception=e, url=url_version) from e
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching Paper project info: {e}")
-            return None, None
+            raise VersionInfoError(
+                f"Error fetching project versions from {url_projects}",
+                original_exception=e, url=url_projects) from e
+        except json.JSONDecodeError as e:
+            raise VersionInfoError(
+                f"Error decoding project versions JSON from {url_projects}",
+                original_exception=e, url=url_projects) from e
+
+        return None, None
 
     @staticmethod
     def _get_build_data_static(version: str,
@@ -109,25 +145,32 @@ class StableVersionStrategy(VersionFetchStrategy):
         cache: Dict[str, Any] = PaperDownloader._load_cache_static()
         cache_key: str = f"{version}-{build_number}"
         if cache_key in cache:
-            print(f"Found cached version for {cache_key}")
             return cache[cache_key]
 
         url_build = (
             f"{BASE_URL}/projects/{PROJECT}/"
-            "versions/{version}/builds/{build_number}"
+            f"versions/{version}/builds/{build_number}"
         )
         try:
-            print(f"Getting build from {url_build}")
-            response_build: requests.Response = requests.get(url_build)
+            response_build: requests.Response = requests.get(url_build,
+                                                             timeout=10)
             response_build.raise_for_status()
             build_data: Dict[str, Any] = response_build.json()
             cache[cache_key] = build_data
             PaperDownloader._save_cache_static(cache)
             return build_data
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching build info for {version}"
-                  f"build {build_number}: {e}")
-            return None
+            raise BuildDataError("Error fetching build data",
+                                 original_exception=e,
+                                 url=url_build,
+                                 version=version,
+                                 build_number=build_number) from e
+        except json.JSONDecodeError as e:
+            raise BuildDataError("Error decoding build data JSON",
+                                 original_exception=e,
+                                 url=url_build,
+                                 version=version,
+                                 build_number=build_number) from e
 
 
 class PaperDownloader:
@@ -148,7 +191,6 @@ class PaperDownloader:
         except FileNotFoundError:
             return {}
         except json.JSONDecodeError:
-            print("Error decoding cache file. Starting with an empty cache.")
             return {}
 
     @staticmethod
@@ -168,48 +210,47 @@ class PaperDownloader:
         url_build = (f"{BASE_URL}/projects/{PROJECT}/"
                      f"versions/{version}/builds/{build_number}")
         try:
-            print(f"Getting build from {url_build}")
-            response_build: requests.Response = requests.get(url_build)
+            response_build: requests.Response = requests.get(url_build,
+                                                             timeout=10)
             response_build.raise_for_status()
             build_data: Dict[str, Any] = response_build.json()
             cache[cache_key] = build_data
             self._save_cache_static(cache)
             return build_data
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching build info for {version}"
-                  f"build {build_number}: {e}")
-            return None
+            raise BuildDataError("Error fetching build data",
+                                 original_exception=e,
+                                 url=url_build,
+                                 version=version,
+                                 build_number=build_number) from e
+        except json.JSONDecodeError as e:
+            raise BuildDataError("Error decoding build data JSON",
+                                 original_exception=e,
+                                 url=url_build,
+                                 version=version,
+                                 build_number=build_number) from e
 
     def _check_existing_file(self, filepath: str, expected_hash: str) -> bool:
         if os.path.exists(filepath):
-            print(f"File '{os.path.basename(filepath)}' already exists. "
-                  f"Checking hash...")
             with open(filepath, 'rb') as f:
                 file_hash: str = hashlib.sha256(f.read()).hexdigest()
             if file_hash == expected_hash:
-                print("Hash matches. Skipping download.")
                 return True
             else:
-                print("Hash mismatch. Downloading new file.")
                 return False
         return False
 
     def download(self) -> Optional[str]:
         version, build = self.version_strategy.get_version_and_build()
         if not version or build is None:
-            print(
-                "Could not determine the Paper version and build to download."
-            )
             return None
 
-        print(f"Downloading Paper version: {version}, build: {build}")
         build_data: Optional[Dict[str, Any]] = self._get_build_data(version,
                                                                     build)
         if not build_data or not all(
                 key in build_data.get('downloads', {}) for key in
                 ['application']
         ):
-            print("Could not retrieve Paper download information.")
             return None
 
         filename: str = build_data['downloads']['application']['name']
@@ -233,9 +274,8 @@ class PaperDownloader:
         os.makedirs(download_directory, exist_ok=True)
         filepath: str = os.path.join(download_directory, filename)
         try:
-            print(f"Downloading {filename} from {download_url}...")
             response: requests.Response = requests.get(download_url,
-                                                       stream=True)
+                                                       stream=True, timeout=10)
             response.raise_for_status()
             total_size: int = int(
                 response.headers.get('content-length', 0))
@@ -247,9 +287,6 @@ class PaperDownloader:
                     progress_bar.update(len(data))
                     file.write(data)
             progress_bar.close()
-            if total_size != 0 and progress_bar.n != total_size:
-                print("ERROR, something went wrong during download.")
-            print(f"Successfully downloaded to {filepath}")
             return filepath
         except requests.exceptions.RequestException as e:
             print(f"Error downloading file: {e}")

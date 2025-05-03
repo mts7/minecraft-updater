@@ -1,8 +1,13 @@
+import fnmatch
 import glob
-import subprocess
+import shutil
+import subprocess  # nosec B404
 import os
+import tarfile
 from datetime import datetime, timedelta
 from typing import List, Optional
+
+from src.exceptions import ScreenNotInstalled
 
 
 class FileManager:
@@ -24,11 +29,14 @@ class FileManager:
         self.backup_directory: str = backup_directory
         self.screen_name: str = screen_name
         os.makedirs(self.backup_directory, exist_ok=True)
+        self.original_cwd = ""
 
     def create_server_backup(self,
-                             exclude_patterns: Optional[List[str]] = None,
+                             exclude_patterns: Optional[
+                                 List[str]] = None,
                              days_to_keep: int = 30) -> None:
-        """Executes a backup of the Minecraft server files."""
+        """Executes a backup of the Minecraft server files using tarfile."""
+        self.original_cwd = os.getcwd()
         timestamp_format: str = "%Y-%m-%d %H:%M:%S"
         start_time: str = datetime.now().strftime(timestamp_format)
         server_dirname: str = os.path.basename(self.server_directory)
@@ -37,12 +45,15 @@ class FileManager:
                                 ".tar.gz")
         backup_path: str = os.path.join(self.backup_directory, backup_filename)
 
-        print(f"Starting server backup at {start_time} for {server_dirname}")
-
         screen_running: bool = False
+        screen_path = shutil.which('screen')
+        if screen_path is None:
+            raise ScreenNotInstalled
+
         try:
-            subprocess.run(['screen', '-list'], check=True,
-                           capture_output=True, text=True)
+            subprocess.run([screen_path, '-list'], check=True,
+                           capture_output=True, text=True,
+                           shell=False)  # nosec B603
             self._send_screen_command(self.screen_name,
                                       "say Backup starting at "
                                       f"{start_time}. "
@@ -57,18 +68,16 @@ class FileManager:
 
         try:
             os.chdir(self.server_directory)
-
-            files_to_backup: List[str] = glob.glob('*')
-            tar_command: List[str] = ['tar', '-czvf', backup_path]
-
-            if exclude_patterns:
-                for pattern in exclude_patterns:
-                    tar_command.extend(['--exclude', pattern])
-
-            tar_command.extend(files_to_backup)
-
-            print(f"Executing backup command: {' '.join(tar_command)}")
-            subprocess.run(tar_command, check=True)
+            with tarfile.open(backup_path, "w:gz") as tar:
+                for item in glob.glob('*'):
+                    exclude = False
+                    if exclude_patterns:
+                        for pattern in exclude_patterns:
+                            if fnmatch.fnmatch(item, pattern):
+                                exclude = True
+                                break
+                    if not exclude:
+                        tar.add(item, arcname=item)
 
             if screen_running:
                 self._send_screen_command(self.screen_name, "save-on")
@@ -77,38 +86,30 @@ class FileManager:
                     self.screen_name,
                     (f"say Backup complete at {end_time}! "
                      "World now saving."))
-            else:
-                print(
-                    "Backup complete at "
-                    f"{datetime.now().strftime(timestamp_format)}.")
 
             self._remove_old_backups(days_to_keep,
                                      server_dirname=server_dirname)
-            print(f"Server backup completed successfully to {backup_path}")
-
-        except FileNotFoundError:
-            print(
-                "Error: 'tar' command not found. "
-                "Ensure it's in your system's PATH.")
-        except subprocess.CalledProcessError as e:
-            print(f"Error during backup: {e}")
         except Exception as e:
-            print(f"An unexpected error occurred during backup: {e}")
+            print(f"Error creating backup using tarfile: {e}")
+            # Optionally, you might want to re-raise the exception
+            # raise
+        finally:
+            # It's good practice to change back to the original directory
+            os.chdir(self.original_cwd)
 
     def _send_screen_command(self, screen_name: str, command: str) -> None:
         """Sends a command to a running screen session."""
+        screen_path = shutil.which('screen')
+        if screen_path is None:
+            raise ScreenNotInstalled
+
         try:
             subprocess.run(
                 [
-                    'screen',
-                    '-r',
-                    screen_name,
-                    '-X',
-                    'stuff',
-                    f"{command}\n"
-                 ],
-                check=True)
-            print(f"Sent command to screen '{screen_name}': {command}")
+                    screen_path,
+                    '-r', screen_name, '-X', 'stuff', f"{command}\n"
+                ],
+                check=True, shell=False)  # nosec B603
         except FileNotFoundError:
             print("Error: 'screen' command not found. Ensure it's installed.")
         except subprocess.CalledProcessError as e:
@@ -124,9 +125,6 @@ class FileManager:
         optionally filtering by server directory name.
         """
         cutoff: datetime = datetime.now() - timedelta(days=days)
-        print(
-            f"Removing backup files older than {cutoff.strftime('%Y-%m-%d')} "
-            f"in {self.backup_directory}")
         for filename in os.listdir(self.backup_directory):
             filepath: str = os.path.join(self.backup_directory, filename)
             if os.path.isfile(filepath):
@@ -137,10 +135,8 @@ class FileManager:
                             "mcbackup_") and filename.endswith(".tar.gz"):
                         if server_dirname:
                             if f"mcbackup_{server_dirname}_" in filename:
-                                print(f"Deleting old backup: {filepath}")
                                 os.remove(filepath)
                         else:
-                            print(f"Deleting old backup: {filepath}")
                             os.remove(filepath)
                 except Exception as e:
                     print(f"Error checking or deleting {filepath}: {e}")

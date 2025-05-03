@@ -1,6 +1,6 @@
 from typing import Optional
 
-from downloaders.geysermc_downloader import GeyserMcDownloader
+from src.downloaders.geysermc_downloader import GeyserMcDownloader
 
 
 class FloodgateDownloader(GeyserMcDownloader):

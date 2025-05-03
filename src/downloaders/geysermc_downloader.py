@@ -6,6 +6,11 @@ import hashlib
 import re
 from typing import Optional, Dict, Any
 
+from src.exceptions import (DownloadError, DownloadIncompleteError,
+                            DownloadOSError, APIDataError, APIRequestError,
+                            HashCalculationError, FileAccessError,
+                            DownloadRequestError)
+
 
 class GeyserMcDownloader:
     API_BASE_URL_V2_LATEST: str = ""
@@ -26,22 +31,19 @@ class GeyserMcDownloader:
     def _fetch_latest_info(self) -> Optional[Dict[str, Any]]:
         api_url = self.API_BASE_URL_V2_LATEST
         if not api_url:
-            print(f"API URL not defined for {self.__class__.__name__}.")
             return None
         try:
-            print(f"Fetching latest info from {api_url}"
-                  f"for {self.__class__.__name__}.")
-            response: requests.Response = requests.get(api_url)
+            response: requests.Response = requests.get(api_url, timeout=10)
             response.raise_for_status()
-            return response.json()
+            try:
+                return response.json()
+            except json.JSONDecodeError as e:
+                raise APIDataError(
+                    f"Failed to decode JSON response from {api_url}",
+                    original_exception=e, url=api_url) from e
         except requests.exceptions.RequestException as e:
-            print(f"Error fetching latest info for {self.__class__.__name__} "
-                  f"from {api_url}: {e}")
-            return None
-        except json.JSONDecodeError:
-            print(f"Error decoding API response from {api_url} "
-                  f"for {self.__class__.__name__}.")
-            return None
+            raise APIRequestError(f"Error during request to {api_url}",
+                                  original_exception=e, url=api_url) from e
 
     def get_latest_version(self) -> Optional[str]:
         return self._latest_info.get("version") if self._latest_info else None
@@ -83,21 +85,37 @@ class GeyserMcDownloader:
                              expected_hash: Optional[str]
                              ) -> bool:
         if os.path.exists(filepath):
-            print(f"File '{os.path.basename(filepath)}' already exists. "
-                  "Checking hash...")
             try:
                 with open(filepath, 'rb') as f:
-                    file_hash: str = hashlib.sha256(f.read()).hexdigest()
+                    try:
+                        file_hash: str = hashlib.sha256(f.read()).hexdigest()
+                    except Exception as e:
+                        raise HashCalculationError(
+                            f"Error calculating hash for file: {filepath}",
+                            original_exception=e, filepath=filepath) from e
                 if expected_hash and file_hash == expected_hash:
-                    print("Hash matches. Skipping download.")
                     return True
                 else:
-                    print("Hash mismatch or no expected hash. "
-                          "Downloading new file.")
                     return False
+            except FileNotFoundError as e:
+                raise FileAccessError(f"File not found: {filepath}",
+                                      original_exception=e,
+                                      filepath=filepath) from e
+            except PermissionError as e:
+                raise FileAccessError(
+                    f"Permission error accessing file: {filepath}",
+                    original_exception=e, filepath=filepath) from e
+            except OSError as e:
+                raise FileAccessError(
+                    f"Operating system error accessing file: {filepath}",
+                    original_exception=e, filepath=filepath) from e
+            except HashCalculationError:  # Re-raise our custom hash error
+                raise
             except Exception as e:
-                print(f"Error reading existing file: {e}")
-                return False
+                raise FileAccessError(
+                    "An unexpected error occurred "
+                    f"while checking file: {filepath}",
+                    original_exception=e, filepath=filepath) from e
         return False
 
     def _download_file(self,
@@ -109,9 +127,8 @@ class GeyserMcDownloader:
         filepath: str = os.path.join(download_directory, filename)
         temp_file: Optional[Any] = None
         try:
-            print(f"Downloading {filename} from {download_url}...")
             response: requests.Response = requests.get(download_url,
-                                                       stream=True)
+                                                       stream=True, timeout=10)
             response.raise_for_status()
             total_size: int = int(response.headers.get(
                 'content-length',
@@ -126,17 +143,31 @@ class GeyserMcDownloader:
                 temp_file.write(data)
             progress_bar.close()
             if total_size != 0 and progress_bar.n != total_size:
-                print("ERROR, something went wrong during download.")
-                return None
+                raise DownloadIncompleteError(
+                    f"Download from {download_url} "
+                    f"to {filepath} was incomplete",
+                    url=download_url, filepath=filepath)
             else:
-                print(f"Successfully downloaded to {filepath}")
                 return filepath
         except requests.exceptions.RequestException as e:
-            print(f"Error downloading file: {e}")
-            return None
+            raise DownloadRequestError(
+                f"Request error during download from {download_url} "
+                f"to {filepath}: {e}",
+                original_exception=e, url=download_url,
+                filepath=filepath) from e
+        except OSError as e:
+            raise DownloadOSError(
+                f"OS error during download to {filepath}: {e}",
+                original_exception=e, url=download_url,
+                filepath=filepath) from e
+        except DownloadIncompleteError:
+            raise
         except Exception as e:
-            print(f"An unexpected error occurred during download: {e}")
-            return None
+            raise DownloadError(
+                "An unexpected error occurred during download "
+                f"from {download_url} to {filepath}: {e}",
+                original_exception=e, url=download_url,
+                filepath=filepath) from e
         finally:
             if temp_file:
                 temp_file.close()
@@ -147,7 +178,6 @@ class GeyserMcDownloader:
                            filename_pattern: Optional[str] = None
                            ) -> Optional[str]:
         if self._latest_info is None:
-            print(f"Could not retrieve latest information for {project}.")
             return None
 
         version = self._latest_info.get("version")
@@ -156,7 +186,6 @@ class GeyserMcDownloader:
                          .get(download_subpath, {}).get('sha256'))
 
         if not version or build is None or not expected_hash:
-            print(f"Incomplete latest {project} information.")
             return None
 
         filename = self._get_expected_filename(version,
@@ -173,8 +202,6 @@ class GeyserMcDownloader:
             build=build,
             download=download_subpath
         )
-        print(f"Downloading {project} version {version} "
-              f"build {build} as {filename}...")
         return self._download_file(download_url,
                                    filename,
                                    self.download_directory)

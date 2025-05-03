@@ -1,4 +1,4 @@
-from downloaders.geysermc_downloader import GeyserMcDownloader
+from src.downloaders.geysermc_downloader import GeyserMcDownloader
 from typing import Optional
 
 

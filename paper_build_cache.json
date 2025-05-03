@@ -1395,5 +1395,115 @@
                 "sha256": "45c63efe065a6ee9f0a261800f2700589e0dc3a3d4f69d3425608ed9c15401ca"
             }
         }
+    },
+    "1.21.5-65": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 65,
+        "time": "2025-05-02T20:38:04.023Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "2bd84f6f0e14bd6ef4ae136655888f877412875d",
+                "summary": "Expand PotionMeta Api to allow getting effective potion colour and effects (#12390)",
+                "message": "Expand PotionMeta Api to allow getting effective potion colour and effects (#12390)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-65.jar",
+                "sha256": "a2bfd50f92346f1f17f3e49c91ded74ac2b57e731d3ef69a5171bb8d31bf6a6f"
+            }
+        }
+    },
+    "1.21.5-64": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 64,
+        "time": "2025-05-02T20:20:34.382Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "825685f82ffbb34feee68c0f79ecfa5deed56c3f",
+                "summary": "Add PlayerPickBlockEvent and PlayerPickEntityEvent (#12425)",
+                "message": "Add PlayerPickBlockEvent and PlayerPickEntityEvent (#12425)\n\nExtensions of the existing PlayerPickItemEvent that allow more fine grained access to relevant context, like the picked block or the entity."
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-64.jar",
+                "sha256": "75f3f9818c2e968dd2bbdb2e7e86cf5bd39fddc1349bb98486cb45d61d4bad3a"
+            }
+        }
+    },
+    "1.21.5-63": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 63,
+        "time": "2025-05-02T20:11:55.791Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "1074237311360e6145e69e47797657ff079bc9bf",
+                "summary": "Pass correct draw strength for EntityShootBowEvent (#12308)",
+                "message": "Pass correct draw strength for EntityShootBowEvent (#12308)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-63.jar",
+                "sha256": "fdf863c59351b82d15385dad4dcf9e963a607362584f83a926332b5e17114f83"
+            }
+        }
+    },
+    "1.21.5-62": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 62,
+        "time": "2025-05-02T19:21:28.287Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "d637ae85ddd21978a934b2ecdcce142cbccc8f46",
+                "summary": "Fix NoSuchElementException in EntityTransformEvent for slimes (#12510)",
+                "message": "Fix NoSuchElementException in EntityTransformEvent for slimes (#12510)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-62.jar",
+                "sha256": "93bd92e8bcb10261e880c0b09be283222d14a5bad726b8ec135b6abbb6d2e980"
+            }
+        }
+    },
+    "1.21.5-61": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 61,
+        "time": "2025-05-02T19:12:31.864Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "cb3ffd0b4ae8228ed34f300f8b0c0dc910e365f9",
+                "summary": "Don't store empty PDCs on raids",
+                "message": "Don't store empty PDCs on raids\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-61.jar",
+                "sha256": "14bf3546ea44695689743cc897d2fba00b8734315973e0ec18a23672ec383853"
+            }
+        }
     }
 }

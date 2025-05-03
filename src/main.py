@@ -1,15 +1,16 @@
 import argparse
 import os
-import sys
 from datetime import datetime
 from typing import Dict, Optional, Any, Tuple
 
 import yaml
 
-from downloaders.geyser_downloader import GeyserDownloader
-from downloaders.geyser_floodgate_downloader import FloodgateDownloader
-from downloaders.paper_downloader import PaperDownloader
-from updater.file_manager import FileManager
+from src.downloaders.geyser_downloader import GeyserDownloader
+from src.downloaders.geyser_floodgate_downloader import FloodgateDownloader
+from src.downloaders.paper_downloader import PaperDownloader
+from src.exceptions import ConfigParseError, ConfigNotFoundError, \
+    ServerConfigNotFoundError, MissingRequiredFieldError
+from src.updater.file_manager import FileManager
 
 DEFAULT_DOWNLOAD_DIRECTORY = "downloads"
 CONFIG_FILE = "config.yaml"
@@ -17,10 +18,8 @@ EXAMPLE_CONFIG_FILE = "example.config.yaml"
 
 
 def backup_files(server_dir, backup_dir, screen_name, exclude):
-    print("\n--- Backing up Server Files ---")
     file_manager = FileManager(server_dir, backup_dir, screen_name)
     file_manager.create_server_backup(exclude_patterns=exclude)
-    print("--- Server backup complete. ---")
 
 
 def download_and_backup(server_name: str,
@@ -32,10 +31,10 @@ def download_and_backup(server_name: str,
         servers_config: A dictionary containing server configurations.
     """
     if server_name not in servers_config:
-        print(
+        raise ServerConfigNotFoundError(
             f"Error: Server configuration '{server_name}' not found "
-            f"in {CONFIG_FILE} under the 'servers' section.")
-        sys.exit(1)
+            f"in {CONFIG_FILE} under the 'servers' section."
+        )
 
     server_settings: Dict[str, Any] = servers_config[server_name]
 
@@ -43,14 +42,13 @@ def download_and_backup(server_name: str,
                        "backup_directory"]
     for field in required_fields:
         if field not in server_settings or not server_settings[field]:
-            print(
+            raise MissingRequiredFieldError(
                 f"Error: '{field}' is a required field for "
-                f"server '{server_name}' in {CONFIG_FILE}.")
-            sys.exit(1)
+                f"server '{server_name}' in {CONFIG_FILE}."
+            )
 
     download_directory: str = server_settings['download_directory']
 
-    print(f"--- Downloading server files to: {download_directory} ---")
     new_paper_file, new_geyser_file, new_floodgate_file = (
         download_server_files(download_directory))
 
@@ -59,33 +57,44 @@ def download_and_backup(server_name: str,
 
 
 def download_floodgate(download_directory) -> None:
-    print("\n--- Checking and Downloading Latest Floodgate ---")
     floodgate_downloader = FloodgateDownloader(download_directory)
     floodgate_downloader.download_latest()
 
 
 def download_geyser(download_directory) -> None:
     geyser_downloader = GeyserDownloader(download_directory)
-    print("--- Checking and Downloading Latest Geyser ---")
     geyser_downloader.download_latest()
 
 
 def download_paper(download_directory) -> None:
     paper_downloader = PaperDownloader(download_directory)
-    print("\n--- Processing Paper Minecraft ---")
     paper_downloader.download()
 
 
-def download_server_files(download_directory: str)\
+def download_server_files(download_directory: str) \
         -> Tuple[Optional[str], Optional[str], Optional[str]]:
-    print(f"--- Downloading server files to: {download_directory} ---")
     paper_downloader = PaperDownloader(download_directory)
     geyser_downloader = GeyserDownloader(download_directory)
     floodgate_downloader = FloodgateDownloader(download_directory)
 
-    new_paper_file = paper_downloader.download()
-    new_geyser_file = geyser_downloader.download_latest()
-    new_floodgate_file = floodgate_downloader.download_latest()
+    new_paper_file: Optional[str] = None
+    new_geyser_file: Optional[str] = None
+    new_floodgate_file: Optional[str] = None
+
+    try:
+        new_paper_file = paper_downloader.download()
+    except Exception as e:
+        print(f"Error downloading Paper in {download_directory}", e)
+
+    try:
+        new_geyser_file = geyser_downloader.download_latest()
+    except Exception as e:
+        print(f"Error downloading Geyser in {download_directory}", e)
+
+    try:
+        new_floodgate_file = floodgate_downloader.download_latest()
+    except Exception as e:
+        print(f"Error downloading Floodgate in {download_directory}", e)
 
     return new_paper_file, new_geyser_file, new_floodgate_file
 
@@ -99,7 +108,6 @@ def get_backup_path(server_directory: str, backup_directory: str)\
     backup_filepath: str = os.path.join(backup_directory, backup_filename)
 
     if os.path.exists(backup_filepath):
-        print(f"Backup already exists: {backup_filepath}. Skipping backup.")
         return None
 
     return backup_filepath
@@ -107,7 +115,6 @@ def get_backup_path(server_directory: str, backup_directory: str)\
 
 def load_config(filepath: str = CONFIG_FILE) -> Dict[str, Dict[str, Any]]:
     if not os.path.exists(filepath):
-        print(f"Error: Configuration file '{filepath}' not found.")
         if os.path.exists(EXAMPLE_CONFIG_FILE):
             print(
                 "An example configuration file "
@@ -115,15 +122,15 @@ def load_config(filepath: str = CONFIG_FILE) -> Dict[str, Dict[str, Any]]:
             print(
                 f"You can copy or rename it to '{CONFIG_FILE}' "
                 "and modify it with your settings.")
-        sys.exit(1)
+        raise ConfigNotFoundError("Error: Configuration file "
+                                  f"'{filepath}' not found.")
 
     try:
         with open(filepath, 'r') as f:
             config: Dict[str, Any] = yaml.safe_load(f) or {}
         return config.get('servers', {})
     except yaml.YAMLError as e:
-        print(f"Error parsing '{filepath}': {e}")
-        sys.exit(1)
+        raise ConfigParseError(f"Error parsing '{filepath}': {e}")
 
 
 def perform_backup_if_needed(
@@ -133,7 +140,6 @@ def perform_backup_if_needed(
         new_floodgate_file: Optional[str],
 ) -> None:
     if not (new_paper_file or new_geyser_file or new_floodgate_file):
-        print("No new server files downloaded, skipping backup.")
         return
 
     server_directory: str = server_settings['server_directory']
@@ -143,7 +149,6 @@ def perform_backup_if_needed(
     if not backup_filepath:
         return
 
-    print(f"--- Performing backup to: {backup_filepath} ---")
     backup_files(
         server_directory,
         backup_directory,
@@ -163,7 +168,7 @@ def main():
     servers_config = load_config()
     download_directory = DEFAULT_DOWNLOAD_DIRECTORY
 
-    if args.server:
+    if args.server and args.server in servers_config:
         download_and_backup(args.server, servers_config)
     else:
         download_server_files(download_directory)
