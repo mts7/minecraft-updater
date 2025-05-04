@@ -4,7 +4,7 @@ from typing import Tuple, Optional, Any, Dict
 import requests
 
 from src.exceptions import VersionInfoError
-from src.downloader.paper_version_strategies.version_fetch_strategy import \
+from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 
 

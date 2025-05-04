@@ -100,6 +100,16 @@ class FileAccessError(Exception):
         self.filepath: Optional[str] = filepath
 
 
+class FloodgateDownloadError(Exception):
+    """Raised when there is an error downloading Floodgate."""
+    pass
+
+
+class GeyserDownloadError(Exception):
+    """Raised when there is an error downloading Geyser."""
+    pass
+
+
 class HashCalculationError(Exception):
     """Custom exception for errors during hash calculation."""
 
@@ -109,6 +119,11 @@ class HashCalculationError(Exception):
         super().__init__(message)
         self.original_exception: Optional[Exception] = original_exception
         self.filepath: Optional[str] = filepath
+
+
+class InvalidPaperVersionFormatError(ValueError):
+    """Raised when the provided Paper version format is invalid."""
+    pass
 
 
 class LatestInfoFetchError(Exception):
@@ -124,6 +139,16 @@ class LatestInfoFetchError(Exception):
 
 class MissingRequiredFieldError(Exception):
     """Raised when a required field is missing in the server configuration."""
+    pass
+
+
+class NoBuildsFoundError(Exception):
+    """Raised when no builds are found for a specific Paper version."""
+    pass
+
+
+class PaperDownloadError(Exception):
+    """Raised when there is an error downloading Paper."""
     pass
 
 

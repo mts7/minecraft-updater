@@ -2,9 +2,17 @@ import argparse
 import sys
 from typing import Dict, Optional, Any, Tuple
 
+from src.downloader.paper_version_strategy.latest_version_strategy import LatestVersionStrategy
+from src.downloader.paper_version_strategy.stable_version_strategy import StableVersionStrategy
+from src.downloader.paper_version_strategy.specific_version_strategy import \
+    SpecificVersionStrategy
+from src.downloader.paper_version_strategy.version_fetch_strategy import \
+    VersionFetchStrategy
 from src.downloader.server_downloader import ServerDownloader
 from src.exceptions import MissingRequiredFieldError, ConfigNotFoundError, \
-    ConfigParseError
+    ConfigParseError, NoBuildsFoundError, DownloadError, BuildDataError, \
+    InvalidPaperVersionFormatError, PaperDownloadError, GeyserDownloadError, \
+    FloodgateDownloadError
 from src.manager.backup_manager import MinecraftBackupManager
 from src.manager.config_manager import ConfigManager
 from src.manager.server_manager import MinecraftServerManager
@@ -35,7 +43,8 @@ def backup_server(server_name: str, servers_config: Dict[str, Dict[str, Any]]) -
 
 
 def download_server_updates(server_name: str,
-                            servers_config: Dict[str, Dict[str, Any]]) \
+                            servers_config: Dict[str, Dict[str, Any]],
+                            paper_version_strategy: VersionFetchStrategy) \
         -> Tuple[Optional[str], Optional[str], Optional[str]]:
     """Downloads the latest server files for the specified server."""
     server_settings: Dict[str, Any] = servers_config[server_name]
@@ -49,43 +58,82 @@ def download_server_updates(server_name: str,
             )
 
     download_directory: str = server_settings['download_directory']
-    downloader = ServerDownloader(download_directory)
+    downloader = ServerDownloader(download_directory, paper_version_strategy)
     return downloader.download_server_files()
 
 
-def main():
+def main(arguments: argparse.Namespace):
+    """Orchestrates the server management tasks."""
+    servers_config = ConfigManager.load_config(CONFIG_FILE)
+
+    if arguments.paper_version == "latest":
+        paper_version_strategy = LatestVersionStrategy()
+    elif arguments.paper_version and arguments.paper_version != "stable":
+        paper_version_strategy = SpecificVersionStrategy(
+            arguments.paper_version)
+    else:
+        paper_version_strategy = StableVersionStrategy()
+
+    if arguments.server and arguments.server in servers_config:
+        new_files = download_server_updates(arguments.server, servers_config, paper_version_strategy)
+        if any(new_files):
+            backup_server(arguments.server, servers_config)
+        return
+
+    download_directory = DEFAULT_DOWNLOAD_DIRECTORY
+    downloader = ServerDownloader(download_directory, paper_version_strategy)
+    downloader.download_server_files()
+
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Minecraft Server Management Utility")
     parser.add_argument("--server",
                         help=("The name of the server configuration to use "
                               "(as defined under 'servers' in config.yaml)"))
+    parser.add_argument("--paper-version",
+                        default="stable",
+                        help="Specify 'stable', 'latest', or a specific Paper version (e.g., '1.20.4'). Defaults to 'stable'.")
     args = parser.parse_args()
 
-    servers_config = ConfigManager.load_config(CONFIG_FILE)
-
-    if args.server and args.server in servers_config:
-        new_files = download_server_updates(args.server, servers_config)
-        if any(new_files):
-            backup_server(args.server, servers_config)
-        return
-
-    download_directory = DEFAULT_DOWNLOAD_DIRECTORY
-    downloader = ServerDownloader(download_directory)
-    downloader.download_server_files()
-
-
-if __name__ == "__main__":
     try:
-        main()
+        main(args)
     except ConfigNotFoundError as e:
         print(e)
-        sys.exit(2)
+        sys.exit(3)
     except ConfigParseError as e:
         print(e)
         sys.exit(4)
     except MissingRequiredFieldError as e:
         print(e)
+        sys.exit(5)
+    except BuildDataError as e:
+        print(f"Error with Paper build data: {e}")
+        sys.exit(6)
+    except DownloadError as e:
+        print(f"Error during download: {e}")
+        sys.exit(7)
+    except NoBuildsFoundError as e:
+        print(e)
         sys.exit(8)
+    except InvalidPaperVersionFormatError as e:
+        print(
+            f"Error: Invalid Paper version format '{args.paper_version}'. "
+            "Please use 'stable', 'latest', or a specific version string "
+            "(e.g., '1.21.4').")
+        sys.exit(9)
+    except PaperDownloadError as e:
+        print(f"Error downloading Paper: {e}")
+        sys.exit(10)
+    except GeyserDownloadError as e:
+        print(f"Error downloading Geyser: {e}")
+        sys.exit(11)
+    except FloodgateDownloadError as e:
+        print(f"Error downloading Floodgate: {e}")
+        sys.exit(12)
+    except RuntimeError as e:
+        print(e)
+        sys.exit(2)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         sys.exit(1)
