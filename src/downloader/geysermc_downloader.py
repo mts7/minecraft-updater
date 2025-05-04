@@ -1,0 +1,121 @@
+import json
+import os
+import re
+from typing import Optional, Dict, Any
+
+import requests
+
+from src.downloader.file_downloader import FileDownloader
+from src.exceptions import (APIDataError, APIRequestError)
+from src.manager.file_manager import FileManager
+
+
+class GeyserMcDownloader:
+    API_BASE_URL_V2_LATEST: str = ""
+    DOWNLOAD_BASE_URL_V2: str = (
+        "https://download.geysermc.org/v2/projects/{project}"
+        "/versions/{version}/builds/{build}/downloads/{download}"
+    )
+    PROJECT: str = ""
+    DOWNLOAD_SUBPATH: str = ""
+    DEFAULT_DOWNLOAD_DIR: str = ""
+    FILENAME_PATTERN: Optional[str] = None
+
+    def __init__(self, download_directory: str) -> None:
+        self.download_directory: str = download_directory
+        os.makedirs(download_directory, exist_ok=True)
+        self._latest_info: Optional[Dict[str, Any]] = self._fetch_latest_info()
+
+    def _fetch_latest_info(self) -> Optional[Dict[str, Any]]:
+        api_url = self.API_BASE_URL_V2_LATEST
+        if not api_url:
+            return None
+        try:
+            response: requests.Response = requests.get(api_url, timeout=10)
+            response.raise_for_status()
+            try:
+                return response.json()
+            except json.JSONDecodeError as e:
+                raise APIDataError(
+                    f"Failed to decode JSON response from {api_url}",
+                    original_exception=e, url=api_url) from e
+        except requests.exceptions.RequestException as e:
+            raise APIRequestError(f"Error during request to {api_url}",
+                                  original_exception=e, url=api_url) from e
+
+    def get_latest_version(self) -> Optional[str]:
+        return self._latest_info.get("version") if self._latest_info else None
+
+    def get_latest_build(self) -> Optional[int]:
+        return self._latest_info.get("build") if self._latest_info else None
+
+    def _get_expected_filename(
+            self,
+            version: str,
+            build: int,
+            filename_pattern: Optional[str] = None
+    ) -> str:
+        default_filename = f"{self.PROJECT}-latest.jar"
+
+        if not self._latest_info:
+            return default_filename
+
+        base_name: str = (self._latest_info['downloads']
+                          .get(self.DOWNLOAD_SUBPATH, {})
+                          .get('name', default_filename))
+        base, ext = os.path.splitext(base_name)
+        constructed_filename: str = f"{base}-v{version}-b{build}{ext}"
+        pattern = filename_pattern if filename_pattern else default_filename
+
+        if "*" not in pattern and "-SNAPSHOT" not in pattern:
+            return constructed_filename
+
+        match = re.match(
+            r"(.+?)(-SNAPSHOT)?(\.jar)?$",
+            base_name
+        )
+        if match:
+            prefix = match.group(1)
+            return f"{prefix}-v{version}-b{build}{ext}"
+
+        return f"{self.PROJECT}-latest-v{version}-b{build}.jar"
+
+    def _download_artifact(self,
+                           project: str,
+                           download_subpath: str,
+                           filename_pattern: Optional[str] = None
+                           ) -> Optional[str]:
+        if self._latest_info is None:
+            return None
+
+        version = self._latest_info.get("version")
+        build = self._latest_info.get("build")
+        expected_hash = (self._latest_info['downloads']
+                         .get(download_subpath, {}).get('sha256'))
+
+        if not version or build is None or not expected_hash:
+            return None
+
+        filename = self._get_expected_filename(version,
+                                               build,
+                                               filename_pattern)
+        filepath = os.path.join(self.download_directory, filename)
+
+        if FileManager.check_existing_file(filepath, expected_hash):
+            return filepath
+
+        download_url = self.DOWNLOAD_BASE_URL_V2.format(
+            project=project,
+            version=version,
+            build=build,
+            download=download_subpath
+        )
+        return FileDownloader.download_file(
+            download_url,
+            filename,
+            self.download_directory,
+            description=(f"Downloading {project} version {version}, "
+                         f"build {build}"))
+
+    def download_latest(self) -> Optional[str]:
+        raise NotImplementedError("Subclasses must implement download_latest")

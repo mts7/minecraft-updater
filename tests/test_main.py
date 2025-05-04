@@ -6,9 +6,9 @@ from unittest.mock import patch, MagicMock
 import pytest
 import yaml
 
-from downloaders.geyser_downloader import GeyserDownloader
-from downloaders.geyser_floodgate_downloader import FloodgateDownloader
-from downloaders.paper_downloader import PaperDownloader
+from downloader.geyser_downloader import GeyserDownloader
+from downloader.geyser_floodgate_downloader import FloodgateDownloader
+from downloader.paper_downloader import PaperDownloader
 from main import backup_files, FileManager, MissingRequiredFieldError, \
     download_and_backup, CONFIG_FILE, ServerConfigNotFoundError, \
     download_floodgate, download_geyser, download_paper, download_server_files, \
