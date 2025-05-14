@@ -14,9 +14,9 @@ from src.exceptions import (
 class FileDownloader:
     @staticmethod
     def download_file(download_url: str,
-                     filepath: str,
-                     download_directory: str = ".",
-                     description: Optional[str] = None) -> Optional[str]:
+                      filepath: str,
+                      download_directory: str = ".",
+                      description: Optional[str] = None) -> Optional[str]:
         os.makedirs(download_directory, exist_ok=True)
         temp_file: Optional[Any] = None
         try:
@@ -32,7 +32,7 @@ class FileDownloader:
                 total=total_size,
                 unit='iB',
                 unit_scale=True,
-                desc=description if description else f"Downloading to {filepath}")
+                desc=description if description else f"Download to {filepath}")
             temp_file = open(filepath, 'wb')
             for data in response.iter_content(block_size):
                 progress_bar.update(len(data))

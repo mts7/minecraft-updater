@@ -107,7 +107,9 @@ class FloodgateDownloadError(Exception):
 
 class GeyserDownloadError(Exception):
     """Raised when there is an error downloading Geyser."""
-    def __init__(self, message: str, original_exception: Optional[Exception] = None):
+
+    def __init__(self, message: str,
+                 original_exception: Optional[Exception] = None):
         super().__init__(message)
         self.original_exception = original_exception
 
@@ -151,6 +153,7 @@ class NoBuildsFoundError(Exception):
 
 class PaperDownloadError(Exception):
     """Raised when there is an error downloading Paper."""
+
     def __init__(self, message: str,
                  original_exception: Optional[Exception] = None):
         super().__init__(message)

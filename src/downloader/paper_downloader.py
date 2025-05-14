@@ -24,13 +24,15 @@ class PaperDownloader:
             download_directory: str = DEFAULT_DOWNLOAD_DIR,
     ) -> None:
         if version_strategy is None:
-            raise ValueError("A version_strategy must be provided during instantiation.")
+            raise ValueError(
+                "A version_strategy must be provided during instantiation.")
         self.download_directory: str = download_directory
         os.makedirs(download_directory, exist_ok=True)
         self._cache_manager = CacheManager(CACHE_FILE)
         self.version_strategy: VersionFetchStrategy = version_strategy
 
-    def _get_build_data(self, version: str, build_number: int) -> Optional[Dict[str, Any]]:
+    def _get_build_data(self, version: str, build_number: int) \
+            -> Optional[Dict[str, Any]]:
         cache_key: str = f"{version}-{build_number}"
         cached_data = self._cache_manager.get(cache_key)
         if cached_data:
@@ -51,43 +53,59 @@ class PaperDownloader:
                                  version=version,
                                  build_number=build_number) from e
         except json.JSONDecodeError as e:
-            raise BuildDataError(f"Error decoding build data JSON from {url_build}",
-                                 original_exception=e,
-                                 version=version,
-                                 build_number=build_number) from e
+            raise BuildDataError(
+                f"Error decoding build data JSON from {url_build}",
+                original_exception=e,
+                version=version,
+                build_number=build_number) from e
 
     def _get_builds_for_version_from_api(self, version: str) -> Dict[str, Any]:
         url_builds = f"{BASE_URL}/projects/{PROJECT}/versions/{version}/builds"
         try:
-            response_builds: requests.Response = requests.get(url_builds, timeout=10)
+            response_builds: requests.Response = requests.get(url_builds,
+                                                              timeout=10)
             response_builds.raise_for_status()
             return response_builds.json()
         except requests.exceptions.RequestException as e:
-            raise DownloadError(f"Error fetching builds list for version {version} from {url_builds}", original_exception=e) from e
+            raise DownloadError(
+                f"Error fetching builds list for version {version} "
+                f"from {url_builds}",
+                original_exception=e) from e
         except json.JSONDecodeError as e:
-            raise DownloadError(f"Error decoding builds list JSON for version {version} from {url_builds}", original_exception=e) from e
+            raise DownloadError(
+                f"Error decoding builds list JSON for version {version} "
+                f"from {url_builds}",
+                original_exception=e) from e
 
-    def download_specific_version(self, version: Optional[str]) -> Optional[str]:
+    def download_specific_version(self, version: Optional[str]) \
+            -> Optional[str]:
         if version is None:
             raise BuildDataError("Version is required.")
 
         builds_data = self._get_builds_for_version_from_api(version)
-        if not builds_data or 'builds' not in builds_data or not builds_data['builds']:
-            raise NoBuildsFoundError(f"No builds found for Paper version {version}.")
+        if (not builds_data
+                or 'builds' not in builds_data
+                or not builds_data['builds']):
+            raise NoBuildsFoundError(
+                f"No builds found for Paper version {version}.")
 
         latest_build = builds_data['builds'][-1]['build']
         return self.download_build(version, latest_build)
 
-    def download_build(self, version: Optional[str], build: int) -> Optional[str]:
+    def download_build(self, version: Optional[str], build: int) \
+            -> Optional[str]:
         if not version:
             raise BuildDataError("Version is required.")
 
-        build_data: Optional[Dict[str, Any]] = self._get_build_data(version, build)
+        build_data: Optional[Dict[str, Any]] = self._get_build_data(version,
+                                                                    build)
         if not build_data or not all(
                 key in build_data.get('downloads', {}) for key in
                 ['application']
         ):
-            raise BuildDataError(f"Could not retrieve download information for Paper version {version}, build {build}.")
+            raise BuildDataError(
+                "Could not retrieve download information for Paper "
+                f"version {version}, build {build}.")
 
         filename: str = build_data['downloads']['application']['name']
         expected_hash: str = build_data['downloads']['application']['sha256']
@@ -103,15 +121,19 @@ class PaperDownloader:
                 download_url,
                 filepath,
                 self.download_directory,
-                description=f"Downloading Paper version {version}, build {build}"
+                description=f"Downloading Paper version {version}, "
+                            f"build {build}"
             )
         except Exception as e:
-            raise DownloadError(f"Error during download from {download_url}", original_exception=e) from e
+            raise DownloadError(f"Error during download from {download_url}",
+                                original_exception=e) from e
 
     def download(self) -> Optional[str]:
         version_info = self.version_strategy.get_version_and_build()
         if not version_info:
-            raise RuntimeError("Could not determine version and build using the provided strategy.")
+            raise RuntimeError(
+                "Could not determine version and build "
+                "using the provided strategy.")
         version, build = version_info
 
         if build is not None:

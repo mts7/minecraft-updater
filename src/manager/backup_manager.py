@@ -3,7 +3,7 @@ import glob
 import os
 import tarfile
 from datetime import datetime, timedelta
-from typing import List, Optional, Dict, Any
+from typing import List, Optional
 
 from src.manager.server_manager import MinecraftServerManager
 
@@ -86,7 +86,8 @@ class MinecraftBackupManager:
         server_dirname: str = os.path.basename(
             self.server_directory.rstrip('/'))
         backup_filename: str = (f"mcbackup_{server_dirname}_"
-                                f"{datetime.now().strftime('%Y-%m-%d-%H')}.tar.gz")
+                                f"{datetime.now().strftime('%Y-%m-%d-%H')}"
+                                ".tar.gz")
         backup_filepath: str = os.path.join(self.backup_directory,
                                             backup_filename)
 

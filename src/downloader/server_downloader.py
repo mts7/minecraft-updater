@@ -3,18 +3,24 @@ from typing import Optional, Tuple
 from src.downloader.geyser_downloader import GeyserDownloader
 from src.downloader.geyser_floodgate_downloader import FloodgateDownloader
 from src.downloader.paper_downloader import PaperDownloader
-from src.downloader.paper_version_strategy.version_fetch_strategy import VersionFetchStrategy
-from src.exceptions import PaperDownloadError, GeyserDownloadError, FloodgateDownloadError
+from src.downloader.paper_version_strategy.version_fetch_strategy import \
+    VersionFetchStrategy
+from src.exceptions import PaperDownloadError, GeyserDownloadError, \
+    FloodgateDownloadError
+
 
 class ServerDownloader:
-    def __init__(self, download_directory: str, paper_version_strategy: VersionFetchStrategy):
+    def __init__(self, download_directory: str,
+                 paper_version_strategy: VersionFetchStrategy):
         self.download_directory = download_directory
-        self.paper_downloader = PaperDownloader(paper_version_strategy, download_directory)
+        self.paper_downloader = PaperDownloader(paper_version_strategy,
+                                                download_directory)
         self.geyser_downloader = GeyserDownloader(download_directory)
         self.floodgate_downloader = FloodgateDownloader(download_directory)
 
     def download_paper(self):
-        version_info = self.paper_downloader.version_strategy.get_version_and_build()
+        version_info = (self.paper_downloader.version_strategy
+                        .get_version_and_build())
         if not version_info:
             return None
 
@@ -25,7 +31,8 @@ class ServerDownloader:
                 return self.paper_downloader.download_build(version, build)
             except Exception as e:
                 raise PaperDownloadError(
-                    f"Error downloading Paper version {version}, build {build}",
+                    f"Error downloading Paper version {version}, "
+                    f"build {build}",
                     original_exception=e) from e
         else:
             try:
@@ -51,7 +58,8 @@ class ServerDownloader:
                 f"Error downloading Floodgate in {self.download_directory}",
                 original_exception=e) from e
 
-    def download_server_files(self) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+    def download_server_files(self)\
+            -> Tuple[Optional[str], Optional[str], Optional[str]]:
         paper_file = self.download_paper()
         geyser_file = self.download_geyser()
         floodgate_file = self.download_floodgate()

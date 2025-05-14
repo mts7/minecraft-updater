@@ -3,8 +3,10 @@ import sys
 import traceback
 from typing import Dict, Optional, Any, Tuple
 
-from src.downloader.paper_version_strategy.latest_version_strategy import LatestVersionStrategy
-from src.downloader.paper_version_strategy.stable_version_strategy import StableVersionStrategy
+from src.downloader.paper_version_strategy.latest_version_strategy import \
+    LatestVersionStrategy
+from src.downloader.paper_version_strategy.stable_version_strategy import \
+    StableVersionStrategy
 from src.downloader.paper_version_strategy.specific_version_strategy import \
     SpecificVersionStrategy
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
@@ -22,7 +24,8 @@ DEFAULT_DOWNLOAD_DIRECTORY = "downloads"
 CONFIG_FILE = "config.yaml"
 
 
-def backup_server(server_name: str, servers_config: Dict[str, Dict[str, Any]]) -> None:
+def backup_server(server_name: str,
+                  servers_config: Dict[str, Dict[str, Any]]) -> None:
     """Performs a backup of the specified server."""
     server_settings: Dict[str, Any] = servers_config[server_name]
 
@@ -78,7 +81,8 @@ def main(arguments: argparse.Namespace):
             paper_version)
 
     if arguments.server and arguments.server in servers_config:
-        new_files = download_server_updates(arguments.server, servers_config, paper_version_strategy)
+        new_files = download_server_updates(arguments.server, servers_config,
+                                            paper_version_strategy)
         if any(new_files):
             backup_server(arguments.server, servers_config)
         return
@@ -96,7 +100,8 @@ if __name__ == "__main__":
                               "(as defined under 'servers' in config.yaml)"))
     parser.add_argument("--paper-version",
                         default="stable",
-                        help="Specify 'stable', 'latest', or a specific Paper version (e.g., '1.20.4'). Defaults to 'stable'.")
+                        help="Specify 'stable', 'latest', or a specific Paper "
+                             "version (e.g., '1.20.4'). Defaults to 'stable'.")
     args = parser.parse_args()
 
     try:
@@ -124,12 +129,14 @@ if __name__ == "__main__":
             f"Error: Invalid Paper version format '{args.paper_version}'. "
             "Please use 'stable', 'latest', or a specific version string "
             "(e.g., '1.21.4').")
+        print(e)
         sys.exit(9)
     except PaperDownloadError as e:
         print(f"Error downloading Paper: {e}")
         print(e.original_exception)
         if e.original_exception:
-            traceback.print_exception(type(e.original_exception), e.original_exception, e.__traceback__)
+            traceback.print_exception(type(e.original_exception),
+                                      e.original_exception, e.__traceback__)
         sys.exit(10)
     except GeyserDownloadError as e:
         print(f"Error downloading Geyser: {e}")

@@ -1,6 +1,7 @@
 import json
 from typing import Dict, Any, Optional
 
+
 class CacheManager:
     def __init__(self, cache_file: str):
         self.cache_file = cache_file

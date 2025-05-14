@@ -6,6 +6,7 @@ from src.exceptions import ConfigNotFoundError, ConfigParseError
 
 EXAMPLE_CONFIG_FILE = 'config.example.yaml'
 
+
 class ConfigManager:
     @staticmethod
     def load_config(config_file: str) -> Dict[str, Dict[str, Any]]:
