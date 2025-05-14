@@ -1,6 +1,6 @@
 import os
 import shutil
-import subprocess
+import subprocess  # nosec B404
 from typing import Optional
 
 from src.exceptions import ScreenNotInstalled
@@ -31,7 +31,9 @@ class MinecraftServerManager:
                     screen_path,
                     '-r', session, '-X', 'stuff', f"{command}\n"
                 ],
-                check=True, shell=False)  # nosec B603
+                check=True,
+                shell=False
+            )  # nosec B603
         except FileNotFoundError:
             print("Error: 'screen' command not found. Ensure it's installed.")
         except subprocess.CalledProcessError as e:
