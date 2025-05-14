@@ -112,7 +112,7 @@ class GeyserMcDownloader:
         )
         return FileDownloader.download_file(
             download_url,
-            filename,
+            filepath,
             self.download_directory,
             description=(f"Downloading {project} version {version}, "
                          f"build {build}"))

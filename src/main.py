@@ -1,5 +1,6 @@
 import argparse
 import sys
+import traceback
 from typing import Dict, Optional, Any, Tuple
 
 from src.downloader.paper_version_strategy.latest_version_strategy import LatestVersionStrategy
@@ -66,13 +67,15 @@ def main(arguments: argparse.Namespace):
     """Orchestrates the server management tasks."""
     servers_config = ConfigManager.load_config(CONFIG_FILE)
 
-    if arguments.paper_version == "latest":
+    paper_version = arguments.paper_version
+    paper_version_strategy: VersionFetchStrategy
+    if paper_version == "latest":
         paper_version_strategy = LatestVersionStrategy()
-    elif arguments.paper_version and arguments.paper_version != "stable":
-        paper_version_strategy = SpecificVersionStrategy(
-            arguments.paper_version)
-    else:
+    elif paper_version == "stable" or not paper_version:
         paper_version_strategy = StableVersionStrategy()
+    elif paper_version:
+        paper_version_strategy = SpecificVersionStrategy(
+            paper_version)
 
     if arguments.server and arguments.server in servers_config:
         new_files = download_server_updates(arguments.server, servers_config, paper_version_strategy)
@@ -124,6 +127,9 @@ if __name__ == "__main__":
         sys.exit(9)
     except PaperDownloadError as e:
         print(f"Error downloading Paper: {e}")
+        print(e.original_exception)
+        if e.original_exception:
+            traceback.print_exception(type(e.original_exception), e.original_exception, e.__traceback__)
         sys.exit(10)
     except GeyserDownloadError as e:
         print(f"Error downloading Geyser: {e}")

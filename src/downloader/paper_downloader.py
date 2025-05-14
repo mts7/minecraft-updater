@@ -63,11 +63,14 @@ class PaperDownloader:
             response_builds.raise_for_status()
             return response_builds.json()
         except requests.exceptions.RequestException as e:
-            raise DownloadError(f"Error fetching builds list for version {version} from {url_builds}", original_exception=e, version=version) from e
+            raise DownloadError(f"Error fetching builds list for version {version} from {url_builds}", original_exception=e) from e
         except json.JSONDecodeError as e:
-            raise DownloadError(f"Error decoding builds list JSON for version {version} from {url_builds}", original_exception=e, version=version) from e
+            raise DownloadError(f"Error decoding builds list JSON for version {version} from {url_builds}", original_exception=e) from e
 
-    def download_specific_version(self, version: str) -> Optional[str]:
+    def download_specific_version(self, version: Optional[str]) -> Optional[str]:
+        if version is None:
+            raise BuildDataError("Version is required.")
+
         builds_data = self._get_builds_for_version_from_api(version)
         if not builds_data or 'builds' not in builds_data or not builds_data['builds']:
             raise NoBuildsFoundError(f"No builds found for Paper version {version}.")
@@ -75,7 +78,10 @@ class PaperDownloader:
         latest_build = builds_data['builds'][-1]['build']
         return self.download_build(version, latest_build)
 
-    def download_build(self, version: str, build: int) -> Optional[str]:
+    def download_build(self, version: Optional[str], build: int) -> Optional[str]:
+        if not version:
+            raise BuildDataError("Version is required.")
+
         build_data: Optional[Dict[str, Any]] = self._get_build_data(version, build)
         if not build_data or not all(
                 key in build_data.get('downloads', {}) for key in
@@ -95,12 +101,12 @@ class PaperDownloader:
         try:
             return FileDownloader.download_file(
                 download_url,
-                filename,
+                filepath,
                 self.download_directory,
                 description=f"Downloading Paper version {version}, build {build}"
             )
         except Exception as e:
-            raise DownloadError(f"Error during download from {download_url}", original_exception=e, version=version, build=build, filename=filename) from e
+            raise DownloadError(f"Error during download from {download_url}", original_exception=e) from e
 
     def download(self) -> Optional[str]:
         version_info = self.version_strategy.get_version_and_build()

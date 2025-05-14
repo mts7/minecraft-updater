@@ -13,13 +13,11 @@ from src.exceptions import (
 
 class FileDownloader:
     @staticmethod
-    def download_file(self,
-                      download_url: str,
-                      filename: str,
-                      download_directory: str = ".",
-                      description: Optional[str] = None) -> Optional[str]:
+    def download_file(download_url: str,
+                     filepath: str,
+                     download_directory: str = ".",
+                     description: Optional[str] = None) -> Optional[str]:
         os.makedirs(download_directory, exist_ok=True)
-        filepath: str = os.path.join(download_directory, filename)
         temp_file: Optional[Any] = None
         try:
             response: requests.Response = requests.get(download_url,
@@ -34,7 +32,7 @@ class FileDownloader:
                 total=total_size,
                 unit='iB',
                 unit_scale=True,
-                desc=description if description else f"Downloading {filename}")
+                desc=description if description else f"Downloading to {filepath}")
             temp_file = open(filepath, 'wb')
             for data in response.iter_content(block_size):
                 progress_bar.update(len(data))

@@ -6,15 +6,12 @@ from unittest.mock import patch, MagicMock
 import pytest
 import yaml
 
-from downloader.geyser_downloader import GeyserDownloader
-from downloader.geyser_floodgate_downloader import FloodgateDownloader
-from downloader.paper_downloader import PaperDownloader
-from main import backup_files, FileManager, MissingRequiredFieldError, \
-    download_and_backup, CONFIG_FILE, ServerConfigNotFoundError, \
-    download_floodgate, download_geyser, download_paper, download_server_files, \
-    get_backup_path, load_config, ConfigParseError, ConfigNotFoundError, \
-    EXAMPLE_CONFIG_FILE, perform_backup_if_needed, main, \
-    DEFAULT_DOWNLOAD_DIRECTORY
+from src.downloader.geyser_downloader import GeyserDownloader
+from src.downloader.geyser_floodgate_downloader import FloodgateDownloader
+from src.downloader.paper_downloader import PaperDownloader
+from src.main import MissingRequiredFieldError, CONFIG_FILE, \
+        ConfigParseError, ConfigNotFoundError, main, DEFAULT_DOWNLOAD_DIRECTORY
+from src.manager.file_manager import FileManager
 
 
 def test_backup_files_calls_create_server_backup():

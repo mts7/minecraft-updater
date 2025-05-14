@@ -1505,5 +1505,27 @@
                 "sha256": "14bf3546ea44695689743cc897d2fba00b8734315973e0ec18a23672ec383853"
             }
         }
+    },
+    "1.21.4-230": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.4",
+        "build": 230,
+        "time": "2025-05-11T20:57:58.640Z",
+        "channel": "default",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "af71568bb3f80370c9cc594dbf2ce81228cb449c",
+                "summary": "Update mache",
+                "message": "Update mache\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.4-230.jar",
+                "sha256": "ea38c61a9e68c74f7219dfd4ad7b9588a685ebad9b85cfad2074ed21a6dae523"
+            }
+        }
     }
 }
