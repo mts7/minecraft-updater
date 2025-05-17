@@ -11,15 +11,13 @@ PROJECT: str = "paper"
 
 class LatestVersionStrategy(VersionFetchStrategy):
     def get_version_and_build(self) -> Tuple[Optional[str], Optional[int]]:
-        versions: Optional[List[str]] = fetch_paper_versions()
-        if not versions:
-            return None, None
+        versions: List[str] = fetch_paper_versions()
 
         version: Optional[str] = versions[-1]
         if not version:
             return None, None
 
-        version_data: Optional[Dict[str, Any]] = fetch_version_details(version)
+        version_data: Dict[str, Any] = fetch_version_details(version)
         if not version_data:
             return None, None
 

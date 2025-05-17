@@ -5,17 +5,17 @@ from typing import Dict, Optional, Any, Tuple
 
 from src.downloader.paper_version_strategy.latest_version_strategy import \
     LatestVersionStrategy
-from src.downloader.paper_version_strategy.stable_version_strategy import \
-    StableVersionStrategy
 from src.downloader.paper_version_strategy.specific_version_strategy import \
     SpecificVersionStrategy
+from src.downloader.paper_version_strategy.stable_version_strategy import \
+    StableVersionStrategy
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 from src.downloader.server_downloader import ServerDownloader
 from src.exceptions import MissingRequiredFieldError, ConfigNotFoundError, \
     ConfigParseError, NoBuildsFoundError, DownloadError, BuildDataError, \
     InvalidPaperVersionFormatError, PaperDownloadError, GeyserDownloadError, \
-    FloodgateDownloadError
+    FloodgateDownloadError, VersionInfoError
 from src.manager.backup_manager import MinecraftBackupManager
 from src.manager.config_manager import ConfigManager
 from src.manager.server_manager import MinecraftServerManager
@@ -106,24 +106,24 @@ if __name__ == "__main__":
 
     try:
         main(args)
+    except BuildDataError as e:
+        print(f"Error with Paper build data: {e}")
+        sys.exit(6)
     except ConfigNotFoundError as e:
         print(e)
         sys.exit(3)
     except ConfigParseError as e:
         print(e)
         sys.exit(4)
-    except MissingRequiredFieldError as e:
-        print(e)
-        sys.exit(5)
-    except BuildDataError as e:
-        print(f"Error with Paper build data: {e}")
-        sys.exit(6)
     except DownloadError as e:
         print(f"Error during download: {e}")
         sys.exit(7)
-    except NoBuildsFoundError as e:
-        print(e)
-        sys.exit(8)
+    except FloodgateDownloadError as e:
+        print(f"Error downloading Floodgate: {e}")
+        sys.exit(12)
+    except GeyserDownloadError as e:
+        print(f"Error downloading Geyser: {e}")
+        sys.exit(11)
     except InvalidPaperVersionFormatError as e:
         print(
             f"Error: Invalid Paper version format '{args.paper_version}'. "
@@ -131,6 +131,12 @@ if __name__ == "__main__":
             "(e.g., '1.21.4').")
         print(e)
         sys.exit(9)
+    except MissingRequiredFieldError as e:
+        print(e)
+        sys.exit(5)
+    except NoBuildsFoundError as e:
+        print(e)
+        sys.exit(8)
     except PaperDownloadError as e:
         print(f"Error downloading Paper: {e}")
         print(e.original_exception)
@@ -138,12 +144,13 @@ if __name__ == "__main__":
             traceback.print_exception(type(e.original_exception),
                                       e.original_exception, e.__traceback__)
         sys.exit(10)
-    except GeyserDownloadError as e:
-        print(f"Error downloading Geyser: {e}")
-        sys.exit(11)
-    except FloodgateDownloadError as e:
-        print(f"Error downloading Floodgate: {e}")
-        sys.exit(12)
+    except VersionInfoError as e:
+        print(f"Error fetching build information: {e}")
+        print(e.original_exception)
+        if e.original_exception:
+            traceback.print_exception(type(e.original_exception),
+                                      e.original_exception, e.__traceback__)
+        sys.exit(13)
     except RuntimeError as e:
         print(e)
         sys.exit(2)
