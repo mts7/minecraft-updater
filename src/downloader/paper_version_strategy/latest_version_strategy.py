@@ -23,24 +23,25 @@ class LatestVersionStrategy(VersionFetchStrategy):
             versions = data.get('versions')
             if isinstance(versions, list) and versions:
                 latest_version = versions[-1]
-            if latest_version:
-                url_version = (
-                    f"{BASE_URL}/projects/{PROJECT}/versions/{latest_version}"
-                )
-                response_version: requests.Response = requests.get(url_version,
-                                                                   timeout=10)
-                response_version.raise_for_status()
-                version_data: Dict[str, Any] = response_version.json()
-                latest_build: Optional[int] = None
-                builds = version_data.get('builds')
-                if isinstance(builds, list) and builds:
-                    latest_build_info = builds[-1]
-                    if isinstance(latest_build_info, dict):
-                        latest_build = latest_build_info.get('build')
 
-                return latest_version, latest_build
+            if not latest_version:
+                return None, None
 
-            return None, None
+            url_version = (
+                f"{BASE_URL}/projects/{PROJECT}/versions/{latest_version}"
+            )
+            response_version: requests.Response = requests.get(url_version,
+                                                               timeout=10)
+            response_version.raise_for_status()
+            version_data: Dict[str, Any] = response_version.json()
+            latest_build: Optional[int] = None
+            builds = version_data.get('builds')
+            if isinstance(builds, list) and builds:
+                latest_build_info = builds[-1]
+                if isinstance(latest_build_info, dict):
+                    latest_build = latest_build_info.get('build')
+
+            return latest_version, latest_build
         except requests.exceptions.RequestException as e:
             raise VersionInfoError(
                 f"Error fetching version info from {url}",
