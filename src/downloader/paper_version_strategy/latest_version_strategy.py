@@ -2,6 +2,7 @@ from typing import Tuple, Optional, Any, Dict, List
 
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
+from src.exceptions import NoPaperVersionsFoundError, InvalidVersionDataError
 from src.utilities.paper_api import (fetch_paper_versions,
                                      fetch_version_details)
 
@@ -10,25 +11,29 @@ PROJECT: str = "paper"
 
 
 class LatestVersionStrategy(VersionFetchStrategy):
-    def get_version_and_build(self) -> Tuple[Optional[str], Optional[int]]:
+    def get_version_and_build(self) -> Tuple[str, Optional[int]]:
         versions: List[str] = fetch_paper_versions()
+        if not versions:
+            raise NoPaperVersionsFoundError(
+                "Could not fetch any Paper versions from the API.")
 
-        version: Optional[str] = versions[-1]
+        version: str = versions[-1]
         if not version:
-            return None, None
+            raise NoPaperVersionsFoundError(
+                "The list of Paper versions was empty.")
 
         version_data: Dict[str, Any] = fetch_version_details(version)
         if not version_data:
-            return None, None
+            raise InvalidVersionDataError(
+                f"Could not fetch details for Paper version {version}.")
 
         builds: Optional[List[Dict[str, Any]]] = version_data.get('builds')
         if not isinstance(builds, list) or not builds:
             return version, None
 
         build_info: Optional[Dict[str, Any]] = builds[-1]
-        if not isinstance(build_info, dict):
+        if not isinstance(build_info, dict) or 'build' not in build_info:
             return version, None
 
         build: Optional[int] = build_info.get('build')
-
         return version, build

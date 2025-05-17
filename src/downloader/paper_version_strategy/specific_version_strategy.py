@@ -10,5 +10,5 @@ class SpecificVersionStrategy(VersionFetchStrategy):
             raise ValueError("Specific version must be a non-empty string.")
         self.specific_version = specific_version
 
-    def get_version_and_build(self) -> Tuple[Optional[str], Optional[int]]:
+    def get_version_and_build(self) -> Tuple[str, Optional[int]]:
         return self.specific_version, None

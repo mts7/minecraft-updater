@@ -15,7 +15,8 @@ from src.downloader.server_downloader import ServerDownloader
 from src.exceptions import MissingRequiredFieldError, ConfigNotFoundError, \
     ConfigParseError, NoBuildsFoundError, DownloadError, BuildDataError, \
     InvalidPaperVersionFormatError, PaperDownloadError, GeyserDownloadError, \
-    FloodgateDownloadError, VersionInfoError
+    FloodgateDownloadError, VersionInfoError, NoStableBuildFoundError, \
+    NoPaperVersionsFoundError, InvalidVersionDataError
 from src.manager.backup_manager import MinecraftBackupManager
 from src.manager.config_manager import ConfigManager
 from src.manager.server_manager import MinecraftServerManager
@@ -131,12 +132,21 @@ if __name__ == "__main__":
             "(e.g., '1.21.4').")
         print(e)
         sys.exit(9)
+    except InvalidVersionDataError as e:
+        print(e)
+        sys.exit(16)
     except MissingRequiredFieldError as e:
         print(e)
         sys.exit(5)
     except NoBuildsFoundError as e:
         print(e)
         sys.exit(8)
+    except NoPaperVersionsFoundError as e:
+        print(e)
+        sys.exit(14)
+    except NoStableBuildFoundError as e:
+        print(e)
+        sys.exit(15)
     except PaperDownloadError as e:
         print(f"Error downloading Paper: {e}")
         print(e.original_exception)

@@ -130,6 +130,11 @@ class InvalidPaperVersionFormatError(ValueError):
     pass
 
 
+class InvalidVersionDataError(ValueError):
+    """Raised when the provided Paper version data are invalid."""
+    pass
+
+
 class LatestInfoFetchError(Exception):
     """Custom exception for errors fetching the latest information."""
 
@@ -148,6 +153,16 @@ class MissingRequiredFieldError(Exception):
 
 class NoBuildsFoundError(Exception):
     """Raised when no builds are found for a specific Paper version."""
+    pass
+
+
+class NoPaperVersionsFoundError(Exception):
+    """Raised when no versions are found for Paper."""
+    pass
+
+
+class NoStableBuildFoundError(Exception):
+    """Raised when no stable builds are found for the Paper version."""
     pass
 
 
