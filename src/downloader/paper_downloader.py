@@ -9,8 +9,6 @@ from src.manager.file_manager import FileManager
 from src.utilities.download_utils import download_file
 from src.utilities.paper_api import PaperApiClient, validate_build_data
 
-BASE_URL: str = "https://api.papermc.io/v2"
-PROJECT: str = "paper"
 CACHE_FILE: str = "paper_build_cache.json"
 DEFAULT_DOWNLOAD_DIR: str = "paper_downloads"
 
@@ -54,8 +52,8 @@ class PaperDownloader:
         if FileManager.check_existing_file(filepath, expected_hash):
             return filepath
 
-        download_url = (f"{BASE_URL}/projects/{PROJECT}/versions/"
-                        f"{version}/builds/{build}/downloads/{filename}")
+        download_url = self.paper_api_client.build_url(
+            f"versions/{version}/builds/{build}/downloads/{filename}")
         return download_file(
             download_url,
             filepath,

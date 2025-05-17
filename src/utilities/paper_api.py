@@ -7,14 +7,18 @@ from src.exceptions import VersionInfoError, BuildDataError
 
 
 class PaperApiClient:
-    def __init__(self, base_url: str = "https://api.papermc.io/v2",
-                 project: str = "paper"):
-        self.base_url = base_url
-        self.project = project
+    def __init__(self, base_url: Optional[str] = None,
+                 project: Optional[str] = None):
+        self.base_url = base_url if base_url is not None \
+            else "https://api.papermc.io/v2"
+        self.project = project if project is not None else "paper"
+
+    def build_url(self, endpoint: str = "") -> str:
+        return f"{self.base_url}/projects/{self.project}/{endpoint}"
 
     def fetch_build_for_version(self, version: str, build_number: int) \
             -> Dict[str, Any]:
-        url_build = self._build_url(
+        url_build = self.build_url(
             f"versions/{version}/builds/{build_number}")
         try:
             response_build: requests.Response = requests.get(url_build,
@@ -34,7 +38,7 @@ class PaperApiClient:
 
     def fetch_builds_for_version(self, version: str)\
             -> Optional[List[Dict[str, Any]]]:
-        builds_url = self._build_url(f"versions/{version}/builds")
+        builds_url = self.build_url(f"versions/{version}/builds")
         try:
             response_builds: requests.Response = requests.get(builds_url,
                                                               timeout=10)
@@ -53,7 +57,7 @@ class PaperApiClient:
                 original_exception=e, url=builds_url) from e
 
     def fetch_paper_versions(self) -> List[str]:
-        url_projects = self._build_url()
+        url_projects = self.build_url()
         try:
             response_projects: requests.Response = requests.get(url_projects,
                                                                 timeout=10)
@@ -76,7 +80,7 @@ class PaperApiClient:
                 original_exception=e, url=url_projects) from e
 
     def fetch_version_details(self, version: str) -> Dict[str, Any]:
-        url_version = self._build_url(f"versions/{version}")
+        url_version = self.build_url(f"versions/{version}")
         try:
             response_version: requests.Response = requests.get(url_version,
                                                                timeout=10)
@@ -92,9 +96,6 @@ class PaperApiClient:
                 f"Error decoding version details JSON for version {version} "
                 f"from {url_version}",
                 original_exception=e, url=url_version) from e
-
-    def _build_url(self, endpoint: str = "") -> str:
-        return f"{self.base_url}/projects/{self.project}/{endpoint}"
 
 
 def find_latest_stable_build(builds: List[Dict[str, Any]]) -> Optional[int]:

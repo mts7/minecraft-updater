@@ -71,17 +71,18 @@ def download_server_updates(server_name: str,
 def main(arguments: argparse.Namespace):
     """Orchestrates the server management tasks."""
     servers_config = ConfigManager.load_config(CONFIG_FILE)
-    paper_api_client = PaperApiClient()
+    paper_api_client = PaperApiClient(arguments.paper_base_url,
+                                      arguments.paper_project)
 
     paper_version = arguments.paper_version
     paper_version_strategy: VersionFetchStrategy
     if paper_version == "latest":
         paper_version_strategy = LatestVersionStrategy(paper_api_client)
-    elif paper_version == "stable" or not paper_version:
-        paper_version_strategy = StableVersionStrategy(paper_api_client)
     elif paper_version:
         paper_version_strategy = SpecificVersionStrategy(paper_api_client,
                                                          paper_version)
+    else:
+        paper_version_strategy = StableVersionStrategy(paper_api_client)
 
     if arguments.server and arguments.server in servers_config:
         new_files = download_server_updates(arguments.server, servers_config,
@@ -105,6 +106,10 @@ if __name__ == "__main__":
                         default="stable",
                         help="Specify 'stable', 'latest', or a specific Paper "
                              "version (e.g., '1.20.4'). Defaults to 'stable'.")
+    parser.add_argument("--paper-base-url",
+                        help="The base URL for the Paper API.")
+    parser.add_argument("--paper-project",
+                        help="The Paper project to use.")
     args = parser.parse_args()
 
     try:
