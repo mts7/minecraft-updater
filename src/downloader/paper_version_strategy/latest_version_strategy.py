@@ -3,16 +3,11 @@ from typing import Tuple, Optional, Any, Dict, List
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 from src.exceptions import NoPaperVersionsFoundError, InvalidVersionDataError
-from src.utilities.paper_api import (fetch_paper_versions,
-                                     fetch_version_details)
-
-BASE_URL: str = "https://api.papermc.io/v2"
-PROJECT: str = "paper"
 
 
 class LatestVersionStrategy(VersionFetchStrategy):
     def get_version_and_build(self) -> Tuple[str, Optional[int]]:
-        versions: List[str] = fetch_paper_versions()
+        versions: List[str] = self._paper_api_client.fetch_paper_versions()
         if not versions:
             raise NoPaperVersionsFoundError(
                 "Could not fetch any Paper versions from the API.")
@@ -22,7 +17,8 @@ class LatestVersionStrategy(VersionFetchStrategy):
             raise NoPaperVersionsFoundError(
                 "The list of Paper versions was empty.")
 
-        version_data: Dict[str, Any] = fetch_version_details(version)
+        version_data: Dict[str, Any] = (
+            self._paper_api_client.fetch_version_details(version))
         if not version_data:
             raise InvalidVersionDataError(
                 f"Could not fetch details for Paper version {version}.")

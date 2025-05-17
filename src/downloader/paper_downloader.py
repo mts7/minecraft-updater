@@ -7,8 +7,7 @@ from src.exceptions import BuildDataError, NoBuildsFoundError
 from src.manager.cache_manager import CacheManager
 from src.manager.file_manager import FileManager
 from src.utilities.download_utils import download_file
-from src.utilities.paper_api import fetch_build_for_version, \
-    fetch_builds_for_version, validate_build_data
+from src.utilities.paper_api import PaperApiClient, validate_build_data
 
 BASE_URL: str = "https://api.papermc.io/v2"
 PROJECT: str = "paper"
@@ -20,6 +19,7 @@ class PaperDownloader:
     def __init__(
             self,
             version_strategy: VersionFetchStrategy,
+            paper_api_client: PaperApiClient,
             download_directory: str = DEFAULT_DOWNLOAD_DIR,
     ) -> None:
         if version_strategy is None:
@@ -28,6 +28,7 @@ class PaperDownloader:
         self.download_directory: str = download_directory
         os.makedirs(download_directory, exist_ok=True)
         self._cache_manager = CacheManager(CACHE_FILE)
+        self.paper_api_client = paper_api_client
         self.version_strategy: VersionFetchStrategy = version_strategy
 
     def download(self) -> Optional[str]:
@@ -69,7 +70,7 @@ class PaperDownloader:
             raise BuildDataError("Version is required.")
 
         builds: Optional[List[Dict[str, Any]]] = (
-            fetch_builds_for_version(version))
+            self.paper_api_client.fetch_builds_for_version(version))
         if not builds:
             raise NoBuildsFoundError(
                 f"No builds found for Paper version {version}.")
@@ -90,6 +91,7 @@ class PaperDownloader:
         if cached_data:
             return cached_data
 
-        build_data = fetch_build_for_version(version, build_number)
+        build_data = self.paper_api_client.fetch_build_for_version(
+            version, build_number)
         self._cache_manager.set(cache_key, build_data)
         return build_data

@@ -20,6 +20,7 @@ from src.exceptions import MissingRequiredFieldError, ConfigNotFoundError, \
 from src.manager.backup_manager import MinecraftBackupManager
 from src.manager.config_manager import ConfigManager
 from src.manager.server_manager import MinecraftServerManager
+from src.utilities.paper_api import PaperApiClient
 
 DEFAULT_DOWNLOAD_DIRECTORY = "downloads"
 CONFIG_FILE = "config.yaml"
@@ -70,16 +71,17 @@ def download_server_updates(server_name: str,
 def main(arguments: argparse.Namespace):
     """Orchestrates the server management tasks."""
     servers_config = ConfigManager.load_config(CONFIG_FILE)
+    paper_api_client = PaperApiClient()
 
     paper_version = arguments.paper_version
     paper_version_strategy: VersionFetchStrategy
     if paper_version == "latest":
-        paper_version_strategy = LatestVersionStrategy()
+        paper_version_strategy = LatestVersionStrategy(paper_api_client)
     elif paper_version == "stable" or not paper_version:
-        paper_version_strategy = StableVersionStrategy()
+        paper_version_strategy = StableVersionStrategy(paper_api_client)
     elif paper_version:
-        paper_version_strategy = SpecificVersionStrategy(
-            paper_version)
+        paper_version_strategy = SpecificVersionStrategy(paper_api_client,
+                                                         paper_version)
 
     if arguments.server and arguments.server in servers_config:
         new_files = download_server_updates(arguments.server, servers_config,
@@ -163,7 +165,9 @@ if __name__ == "__main__":
         sys.exit(13)
     except RuntimeError as e:
         print(e)
+        traceback.print_exception(type(e), e, e.__traceback__)
         sys.exit(2)
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
+        traceback.print_exception(type(e), e, e.__traceback__)
         sys.exit(1)
