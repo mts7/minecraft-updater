@@ -5,9 +5,9 @@ from typing import Optional, Dict, Any
 
 import requests
 
-from src.downloader.file_downloader import FileDownloader
 from src.exceptions import (APIDataError, APIRequestError)
 from src.manager.file_manager import FileManager
+from src.utilities.download_utils import download_file
 
 
 class GeyserMcDownloader:
@@ -110,7 +110,7 @@ class GeyserMcDownloader:
             build=build,
             download=download_subpath
         )
-        return FileDownloader.download_file(
+        return download_file(
             download_url,
             filepath,
             self.download_directory,

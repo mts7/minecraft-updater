@@ -1,12 +1,12 @@
 import os
 from typing import Optional, Dict, Any, List
 
-from src.downloader.file_downloader import FileDownloader
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 from src.exceptions import BuildDataError, NoBuildsFoundError
 from src.manager.cache_manager import CacheManager
 from src.manager.file_manager import FileManager
+from src.utilities.download_utils import download_file
 from src.utilities.paper_api import fetch_build_for_version, \
     fetch_builds_for_version, validate_build_data
 
@@ -60,7 +60,7 @@ class PaperDownloader:
 
         download_url = (f"{BASE_URL}/projects/{PROJECT}/versions/"
                         f"{version}/builds/{build}/downloads/{filename}")
-        return FileDownloader.download_file(
+        return download_file(
             download_url,
             filepath,
             self.download_directory,
