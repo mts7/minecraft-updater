@@ -130,7 +130,7 @@ class PaperDownloader:
 
     def download(self) -> Optional[str]:
         version_info = self.version_strategy.get_version_and_build()
-        if not version_info:
+        if not version_info or version_info == (None, None):
             raise RuntimeError(
                 "Could not determine version and build "
                 "using the provided strategy.")

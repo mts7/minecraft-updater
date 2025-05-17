@@ -1527,5 +1527,27 @@
                 "sha256": "ea38c61a9e68c74f7219dfd4ad7b9588a685ebad9b85cfad2074ed21a6dae523"
             }
         }
+    },
+    "1.21.5-78": {
+        "project_id": "paper",
+        "project_name": "Paper",
+        "version": "1.21.5",
+        "build": 78,
+        "time": "2025-05-15T18:27:02.382Z",
+        "channel": "experimental",
+        "promoted": false,
+        "changes": [
+            {
+                "commit": "d683970d40e3da4eb9d44ac0b32a2c1af91bfa41",
+                "summary": "Add FishHookStateChangeEvent (#12165)",
+                "message": "Add FishHookStateChangeEvent (#12165)\n\n"
+            }
+        ],
+        "downloads": {
+            "application": {
+                "name": "paper-1.21.5-78.jar",
+                "sha256": "928b6efb153f850b1a16ac08b408b0b69800959fb4049795739858bc1fcf85a0"
+            }
+        }
     }
 }

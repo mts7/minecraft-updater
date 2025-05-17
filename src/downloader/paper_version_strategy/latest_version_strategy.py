@@ -1,12 +1,9 @@
-import json
-from typing import Tuple, Optional, Any, Dict
+from typing import Tuple, Optional, Any, Dict, List
 
-import requests
-
-from src.exceptions import VersionInfoError
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
-
+from src.utilities.paper_api import (fetch_paper_versions,
+                                     fetch_version_details)
 
 BASE_URL: str = "https://api.papermc.io/v2"
 PROJECT: str = "paper"
@@ -14,39 +11,26 @@ PROJECT: str = "paper"
 
 class LatestVersionStrategy(VersionFetchStrategy):
     def get_version_and_build(self) -> Tuple[Optional[str], Optional[int]]:
-        url = f"{BASE_URL}/projects/{PROJECT}"
-        try:
-            response: requests.Response = requests.get(url, timeout=10)
-            response.raise_for_status()
-            data: Dict[str, Any] = response.json()
-            latest_version: Optional[str] = None
-            versions = data.get('versions')
-            if isinstance(versions, list) and versions:
-                latest_version = versions[-1]
+        versions: Optional[List[str]] = fetch_paper_versions()
+        if not versions:
+            return None, None
 
-            if not latest_version:
-                return None, None
+        version: Optional[str] = versions[-1]
+        if not version:
+            return None, None
 
-            url_version = (
-                f"{BASE_URL}/projects/{PROJECT}/versions/{latest_version}"
-            )
-            response_version: requests.Response = requests.get(url_version,
-                                                               timeout=10)
-            response_version.raise_for_status()
-            version_data: Dict[str, Any] = response_version.json()
-            latest_build: Optional[int] = None
-            builds = version_data.get('builds')
-            if isinstance(builds, list) and builds:
-                latest_build_info = builds[-1]
-                if isinstance(latest_build_info, dict):
-                    latest_build = latest_build_info.get('build')
+        version_data: Optional[Dict[str, Any]] = fetch_version_details(version)
+        if not version_data:
+            return None, None
 
-            return latest_version, latest_build
-        except requests.exceptions.RequestException as e:
-            raise VersionInfoError(
-                f"Error fetching version info from {url}",
-                original_exception=e, url=url) from e
-        except json.JSONDecodeError as e:
-            raise VersionInfoError(
-                f"Error decoding JSON response from {url}",
-                original_exception=e, url=url) from e
+        builds: Optional[List[Dict[str, Any]]] = version_data.get('builds')
+        if not isinstance(builds, list) or not builds:
+            return version, None
+
+        build_info: Optional[Dict[str, Any]] = builds[-1]
+        if not isinstance(build_info, dict):
+            return version, None
+
+        build: Optional[int] = build_info.get('build')
+
+        return version, build
