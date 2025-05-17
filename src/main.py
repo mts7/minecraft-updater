@@ -18,6 +18,7 @@ from src.exceptions import MissingRequiredFieldError, ConfigNotFoundError, \
     FloodgateDownloadError, VersionInfoError, NoStableBuildFoundError, \
     NoPaperVersionsFoundError, InvalidVersionDataError
 from src.manager.backup_manager import MinecraftBackupManager
+from src.manager.cache_manager import CacheManager
 from src.manager.config_manager import ConfigManager
 from src.manager.server_manager import MinecraftServerManager
 from src.utilities.paper_api import PaperApiClient
@@ -71,8 +72,11 @@ def download_server_updates(server_name: str,
 def main(arguments: argparse.Namespace):
     """Orchestrates the server management tasks."""
     servers_config = ConfigManager.load_config(CONFIG_FILE)
+    cache_manager = CacheManager(arguments.paper_cache_file) \
+        if arguments.paper_cache_file else None
     paper_api_client = PaperApiClient(arguments.paper_base_url,
-                                      arguments.paper_project)
+                                      arguments.paper_project,
+                                      cache_manager=cache_manager)
 
     paper_version = arguments.paper_version
     paper_version_strategy: VersionFetchStrategy
@@ -110,6 +114,8 @@ if __name__ == "__main__":
                         help="The base URL for the Paper API.")
     parser.add_argument("--paper-project",
                         help="The Paper project to use.")
+    parser.add_argument("--paper-cache-file",
+                        help="The path to the cache file.")
     args = parser.parse_args()
 
     try:

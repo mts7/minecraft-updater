@@ -6,16 +6,19 @@ import requests
 from src.exceptions import VersionInfoError, BuildDataError
 from src.manager.cache_manager import CacheManager
 
-CACHE_FILE: str = "paper_build_cache.json"
-
 
 class PaperApiClient:
+    BASE_URL = "https://api.papermc.io/v2"
+    CACHE_FILE: str = "paper_build_cache.json"
+    PROJECT = "paper"
+
     def __init__(self, base_url: Optional[str] = None,
-                 project: Optional[str] = None):
-        self.base_url = base_url if base_url is not None \
-            else "https://api.papermc.io/v2"
-        self.project = project if project is not None else "paper"
-        self.cache = CacheManager(CACHE_FILE)
+                 project: Optional[str] = None,
+                 cache_manager: Optional[CacheManager] = None):
+        self.base_url = base_url if base_url is not None else self.BASE_URL
+        self.project = project if project is not None else self.PROJECT
+        self.cache = cache_manager if cache_manager is not None \
+            else CacheManager(self.CACHE_FILE)
 
     def build_url(self, endpoint: str = "") -> str:
         return f"{self.base_url}/projects/{self.project}/{endpoint}"
