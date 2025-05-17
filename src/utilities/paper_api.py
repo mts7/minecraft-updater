@@ -4,6 +4,9 @@ from typing import Optional, Dict, Any, List
 import requests
 
 from src.exceptions import VersionInfoError, BuildDataError
+from src.manager.cache_manager import CacheManager
+
+CACHE_FILE: str = "paper_build_cache.json"
 
 
 class PaperApiClient:
@@ -12,11 +15,59 @@ class PaperApiClient:
         self.base_url = base_url if base_url is not None \
             else "https://api.papermc.io/v2"
         self.project = project if project is not None else "paper"
+        self.cache = CacheManager(CACHE_FILE)
 
     def build_url(self, endpoint: str = "") -> str:
         return f"{self.base_url}/projects/{self.project}/{endpoint}"
 
-    def fetch_build_for_version(self, version: str, build_number: int) \
+    def get_build_for_version(self, version: str, build_number: int)\
+            -> Dict[str, Any]:
+        cache_key = f"build_data_{version}_{build_number}"
+        cached_data = self.cache.get(cache_key)
+
+        if cached_data:
+            return cached_data
+        else:
+            build_data = self._fetch_build_for_version(version, build_number)
+            self.cache.set(cache_key, build_data, expiry=None)
+            return build_data
+
+    def get_builds_for_version(self, version: str)\
+            -> Optional[List[Dict[str, Any]]]:
+        cache_key = f"builds_for_version_{version}"
+        cached_data = self.cache.get(cache_key)
+
+        if cached_data:
+            return cached_data
+        else:
+            builds_data = self._fetch_builds_for_version(version)
+            if builds_data:
+                self.cache.set(cache_key, builds_data, expiry=6 * 3600)
+            return builds_data
+
+    def get_paper_versions(self) -> List[str]:
+        cache_key = "paper_versions"
+        cached_data = self.cache.get(cache_key)
+
+        if cached_data:
+            return cached_data
+        else:
+            versions = self._fetch_paper_versions()
+            self.cache.set(cache_key, versions, expiry=7 * 24 * 3600)
+            return versions
+
+    def get_version_details(self, version: str) -> Dict[str, Any]:
+        cache_key = f"version_details_{version}"
+        cached_data = self.cache.get(cache_key)
+
+        if cached_data:
+            return cached_data
+        else:
+            version_data = self._fetch_version_details(version)
+            self.cache.set(cache_key, version_data, expiry=6 * 3600)
+            return version_data
+
+    def _fetch_build_for_version(self, version: str, build_number: int) \
             -> Dict[str, Any]:
         url_build = self.build_url(
             f"versions/{version}/builds/{build_number}")
@@ -36,7 +87,7 @@ class PaperApiClient:
                 original_exception=e, version=version,
                 build_number=build_number) from e
 
-    def fetch_builds_for_version(self, version: str)\
+    def _fetch_builds_for_version(self, version: str)\
             -> Optional[List[Dict[str, Any]]]:
         builds_url = self.build_url(f"versions/{version}/builds")
         try:
@@ -56,7 +107,7 @@ class PaperApiClient:
                 f"from {builds_url}",
                 original_exception=e, url=builds_url) from e
 
-    def fetch_paper_versions(self) -> List[str]:
+    def _fetch_paper_versions(self) -> List[str]:
         url_projects = self.build_url()
         try:
             response_projects: requests.Response = requests.get(url_projects,
@@ -79,7 +130,7 @@ class PaperApiClient:
                 f"Error decoding project versions JSON from {url_projects}",
                 original_exception=e, url=url_projects) from e
 
-    def fetch_version_details(self, version: str) -> Dict[str, Any]:
+    def _fetch_version_details(self, version: str) -> Dict[str, Any]:
         url_version = self.build_url(f"versions/{version}")
         try:
             response_version: requests.Response = requests.get(url_version,

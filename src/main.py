@@ -78,7 +78,7 @@ def main(arguments: argparse.Namespace):
     paper_version_strategy: VersionFetchStrategy
     if paper_version == "latest":
         paper_version_strategy = LatestVersionStrategy(paper_api_client)
-    elif paper_version:
+    elif paper_version is None or paper_version != "stable":
         paper_version_strategy = SpecificVersionStrategy(paper_api_client,
                                                          paper_version)
     else:

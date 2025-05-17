@@ -8,18 +8,18 @@ from src.utilities.paper_api import find_latest_stable_build
 
 class StableVersionStrategy(VersionFetchStrategy):
     def get_version_and_build(self) -> Tuple[str, int]:
-        versions = self._paper_api_client.fetch_paper_versions()
+        versions = self._paper_api_client.get_paper_versions()
         if not versions:
             raise NoPaperVersionsFoundError(
                 "Could not fetch any Paper versions from the API.")
 
         for version in reversed(versions):
-            version_data = self._paper_api_client.fetch_version_details(
+            version_data = self._paper_api_client.get_version_details(
                 version)
             if not version_data:
                 continue
 
-            builds = self._paper_api_client.fetch_builds_for_version(version)
+            builds = self._paper_api_client.get_builds_for_version(version)
             if not builds:
                 continue
 

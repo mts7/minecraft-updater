@@ -4,12 +4,10 @@ from typing import Optional, Dict, Any, List
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 from src.exceptions import BuildDataError, NoBuildsFoundError
-from src.manager.cache_manager import CacheManager
 from src.manager.file_manager import FileManager
 from src.utilities.download_utils import download_file
 from src.utilities.paper_api import PaperApiClient, validate_build_data
 
-CACHE_FILE: str = "paper_build_cache.json"
 DEFAULT_DOWNLOAD_DIR: str = "paper_downloads"
 
 
@@ -25,7 +23,6 @@ class PaperDownloader:
                 "A version_strategy must be provided during instantiation.")
         self.download_directory: str = download_directory
         os.makedirs(download_directory, exist_ok=True)
-        self._cache_manager = CacheManager(CACHE_FILE)
         self.paper_api_client = paper_api_client
         self.version_strategy: VersionFetchStrategy = version_strategy
 
@@ -42,7 +39,8 @@ class PaperDownloader:
         if not version:
             raise BuildDataError("Version is required.")
 
-        build_data: Dict[str, Any] = self._get_build_data(version, build)
+        build_data: Dict[str, Any] = (
+            self.paper_api_client.get_build_for_version(version, build))
         validate_build_data(build_data)
 
         filename: str = build_data['downloads']['application']['name']
@@ -68,7 +66,7 @@ class PaperDownloader:
             raise BuildDataError("Version is required.")
 
         builds: Optional[List[Dict[str, Any]]] = (
-            self.paper_api_client.fetch_builds_for_version(version))
+            self.paper_api_client.get_builds_for_version(version))
         if not builds:
             raise NoBuildsFoundError(
                 f"No builds found for Paper version {version}.")
@@ -81,15 +79,3 @@ class PaperDownloader:
 
         latest_build: int = latest_build_info['build']
         return self.download_build(version, latest_build)
-
-    def _get_build_data(self, version: str, build_number: int) \
-            -> Dict[str, Any]:
-        cache_key: str = f"{version}-{build_number}"
-        cached_data = self._cache_manager.get(cache_key)
-        if cached_data:
-            return cached_data
-
-        build_data = self.paper_api_client.fetch_build_for_version(
-            version, build_number)
-        self._cache_manager.set(cache_key, build_data)
-        return build_data
