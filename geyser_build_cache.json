@@ -1,0 +1,51 @@
+{
+    "geyser_build": [
+        1747561076.785429,
+        {
+            "project_id": "geyser",
+            "project_name": "Geyser",
+            "version": "2.7.1",
+            "build": 833,
+            "time": "2025-05-17T16:07:39.002Z",
+            "channel": "default",
+            "promoted": false,
+            "changes": [
+                {
+                    "commit": "d0be6d9c481c848591d29b2dc19701ce836962b2",
+                    "summary": "Use the right javaId when registering non-vanilla block states (#5553)",
+                    "message": "Use the right javaId when registering non-vanilla block states (#5553)"
+                }
+            ],
+            "downloads": {
+                "bungeecord": {
+                    "name": "Geyser-BungeeCord.jar",
+                    "sha256": "bbf2b2b8b29715786206ef8bc3ae88c59a960eaef88c365b5af8e03d5c8e62d6"
+                },
+                "fabric": {
+                    "name": "Geyser-Fabric.jar",
+                    "sha256": "d4390c94ccc3744d150f89ac80dab1f9a49aa8b0414543717c87422a6d823e3a"
+                },
+                "neoforge": {
+                    "name": "Geyser-NeoForge.jar",
+                    "sha256": "e669eadb09169979fff2a4126228bd4664c12a36a5e239cff11935553bfa20ae"
+                },
+                "spigot": {
+                    "name": "Geyser-Spigot.jar",
+                    "sha256": "602d45c86c9358e8c176027e09067418e7cff5d49bc513a37a054efec0aecaf1"
+                },
+                "standalone": {
+                    "name": "Geyser-Standalone.jar",
+                    "sha256": "98c3ba5e73ae28ae08e932f3d8441a6310cee909bc8cad198bbc8e253b4f8fc3"
+                },
+                "velocity": {
+                    "name": "Geyser-Velocity.jar",
+                    "sha256": "ae5770f7389e23a9c189768c6dd68e88ec0eb7e190580b47f6718bca8f30a6d6"
+                },
+                "viaproxy": {
+                    "name": "Geyser-ViaProxy.jar",
+                    "sha256": "3c1a1f43edcd29b5a97382887ac54c75bd75f4c2190e44d3f54b5d76a608c6a7"
+                }
+            }
+        }
+    ]
+}

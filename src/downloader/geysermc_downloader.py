@@ -1,17 +1,16 @@
-import json
 import os
 import re
 from typing import Optional, Dict, Any
 
-import requests
-
-from src.exceptions import (APIDataError, APIRequestError)
+from src.manager.cache_manager import CacheManager
 from src.manager.file_manager import FileManager
+from src.utilities.api_client import ApiClient, get_json
 from src.utilities.download_utils import download_file
 
 
-class GeyserMcDownloader:
+class GeyserMcDownloader(ApiClient):
     API_BASE_URL_V2_LATEST: str = ""
+    CACHE_FILE: str = "geyser_build_cache.json"
     DOWNLOAD_BASE_URL_V2: str = (
         "https://download.geysermc.org/v2/projects/{project}"
         "/versions/{version}/builds/{build}/downloads/{download}"
@@ -21,64 +20,31 @@ class GeyserMcDownloader:
     DEFAULT_DOWNLOAD_DIR: str = ""
     FILENAME_PATTERN: Optional[str] = None
 
-    def __init__(self, download_directory: str) -> None:
+    def __init__(self, download_directory: str,
+                 cache_manager: Optional[CacheManager] = None) -> None:
         self.download_directory: str = download_directory
         os.makedirs(download_directory, exist_ok=True)
-        self._latest_info: Optional[Dict[str, Any]] = self._fetch_latest_info()
+        self.cache = cache_manager if cache_manager is not None \
+            else CacheManager(self.CACHE_FILE)
+        super().__init__(self.cache)
+        self._latest_info: Optional[Dict[str, Any]] = self.get_latest_info()
 
-    def _fetch_latest_info(self) -> Optional[Dict[str, Any]]:
-        api_url = self.API_BASE_URL_V2_LATEST
-        if not api_url:
-            return None
-        try:
-            response: requests.Response = requests.get(api_url, timeout=10)
-            response.raise_for_status()
-            try:
-                return response.json()
-            except json.JSONDecodeError as e:
-                raise APIDataError(
-                    f"Failed to decode JSON response from {api_url}",
-                    original_exception=e, url=api_url) from e
-        except requests.exceptions.RequestException as e:
-            raise APIRequestError(f"Error during request to {api_url}",
-                                  original_exception=e, url=api_url) from e
-
-    def get_latest_version(self) -> Optional[str]:
-        return self._latest_info.get("version") if self._latest_info else None
+    def download_latest(self) -> Optional[str]:
+        raise NotImplementedError("Subclasses must implement download_latest")
 
     def get_latest_build(self) -> Optional[int]:
         return self._latest_info.get("build") if self._latest_info else None
 
-    def _get_expected_filename(
-            self,
-            version: str,
-            build: int,
-            filename_pattern: Optional[str] = None
-    ) -> str:
-        default_filename = f"{self.PROJECT}-latest.jar"
-
-        if not self._latest_info:
-            return default_filename
-
-        base_name: str = (self._latest_info['downloads']
-                          .get(self.DOWNLOAD_SUBPATH, {})
-                          .get('name', default_filename))
-        base, ext = os.path.splitext(base_name)
-        constructed_filename: str = f"{base}-v{version}-b{build}{ext}"
-        pattern = filename_pattern if filename_pattern else default_filename
-
-        if "*" not in pattern and "-SNAPSHOT" not in pattern:
-            return constructed_filename
-
-        match = re.match(
-            r"(.+?)(-SNAPSHOT)?(\.jar)?$",
-            base_name
+    def get_latest_info(self) -> Optional[Dict[str, Any]]:
+        cache_key = "geyser_build"
+        return self._get_cached_data(
+            cache_key,
+            lambda: self._fetch_latest_info(),
+            expiry=6 * 3600
         )
-        if match:
-            prefix = match.group(1)
-            return f"{prefix}-v{version}-b{build}{ext}"
 
-        return f"{self.PROJECT}-latest-v{version}-b{build}.jar"
+    def get_latest_version(self) -> Optional[str]:
+        return self._latest_info.get("version") if self._latest_info else None
 
     def _download_artifact(self,
                            project: str,
@@ -117,5 +83,40 @@ class GeyserMcDownloader:
             description=(f"Downloading {project} version {version}, "
                          f"build {build}"))
 
-    def download_latest(self) -> Optional[str]:
-        raise NotImplementedError("Subclasses must implement download_latest")
+    def _fetch_latest_info(self) -> Optional[Dict[str, Any]]:
+        api_url = self.API_BASE_URL_V2_LATEST
+        if not api_url:
+            return None
+
+        return get_json(api_url)
+
+    def _get_expected_filename(
+            self,
+            version: str,
+            build: int,
+            filename_pattern: Optional[str] = None
+    ) -> str:
+        default_filename = f"{self.PROJECT}-latest.jar"
+
+        if not self._latest_info:
+            return default_filename
+
+        base_name: str = (self._latest_info['downloads']
+                          .get(self.DOWNLOAD_SUBPATH, {})
+                          .get('name', default_filename))
+        base, ext = os.path.splitext(base_name)
+        constructed_filename: str = f"{base}-v{version}-b{build}{ext}"
+        pattern = filename_pattern if filename_pattern else default_filename
+
+        if "*" not in pattern and "-SNAPSHOT" not in pattern:
+            return constructed_filename
+
+        match = re.match(
+            r"(.+?)(-SNAPSHOT)?(\.jar)?$",
+            base_name
+        )
+        if match:
+            prefix = match.group(1)
+            return f"{prefix}-v{version}-b{build}{ext}"
+
+        return f"{self.PROJECT}-latest-v{version}-b{build}.jar"

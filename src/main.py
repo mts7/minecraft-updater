@@ -12,6 +12,7 @@ from src.downloader.paper_version_strategy.stable_version_strategy import \
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 from src.downloader.server_downloader import ServerDownloader
+from src.exceptions import APIRequestError, APIDataError
 from src.exceptions import MissingRequiredFieldError, ConfigNotFoundError, \
     ConfigParseError, NoBuildsFoundError, DownloadError, BuildDataError, \
     InvalidPaperVersionFormatError, PaperDownloadError, GeyserDownloadError, \
@@ -120,6 +121,20 @@ if __name__ == "__main__":
 
     try:
         main(args)
+    except APIDataError as e:
+        print(f"Error during API JSON parsing: {e}")
+        print(e.original_exception)
+        if e.original_exception:
+            traceback.print_exception(type(e.original_exception),
+                                      e.original_exception, e.__traceback__)
+        sys.exit(18)
+    except APIRequestError as e:
+        print(f"Error during API request: {e}")
+        print(e.original_exception)
+        if e.original_exception:
+            traceback.print_exception(type(e.original_exception),
+                                      e.original_exception, e.__traceback__)
+        sys.exit(17)
     except BuildDataError as e:
         print(f"Error with Paper build data: {e}")
         sys.exit(6)
