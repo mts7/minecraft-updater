@@ -46,6 +46,15 @@ class GeyserMcDownloader(ApiClient):
     def get_latest_version(self) -> Optional[str]:
         return self._latest_info.get("version") if self._latest_info else None
 
+    def _build_download_url(self, project: str, version: str, build: str,
+                            download_subpath: str) -> str:
+        return self.DOWNLOAD_BASE_URL_V2.format(
+            project=project,
+            version=version,
+            build=build,
+            download=download_subpath
+        )
+
     def _download_artifact(self,
                            project: str,
                            download_subpath: str,
@@ -70,14 +79,9 @@ class GeyserMcDownloader(ApiClient):
         if FileManager.check_existing_file(filepath, expected_hash):
             return filepath
 
-        download_url = self.DOWNLOAD_BASE_URL_V2.format(
-            project=project,
-            version=version,
-            build=build,
-            download=download_subpath
-        )
         return download_file(
-            download_url,
+            self._build_download_url(project, version, build,
+                                     download_subpath),
             filepath,
             self.download_directory,
             description=(f"Downloading {project} version {version}, "
@@ -97,15 +101,14 @@ class GeyserMcDownloader(ApiClient):
             filename_pattern: Optional[str] = None
     ) -> str:
         default_filename = f"{self.PROJECT}-latest.jar"
-
-        if not self._latest_info:
-            return default_filename
-
+        assert self._latest_info is not None
         base_name: str = (self._latest_info['downloads']
                           .get(self.DOWNLOAD_SUBPATH, {})
                           .get('name', default_filename))
         base, ext = os.path.splitext(base_name)
-        constructed_filename: str = f"{base}-v{version}-b{build}{ext}"
+        constructed_filename: str = _construct_versioned_filename(base,
+                                                                  version,
+                                                                  build, ext)
         pattern = filename_pattern if filename_pattern else default_filename
 
         if "*" not in pattern and "-SNAPSHOT" not in pattern:
@@ -117,6 +120,11 @@ class GeyserMcDownloader(ApiClient):
         )
         if match:
             prefix = match.group(1)
-            return f"{prefix}-v{version}-b{build}{ext}"
+            return _construct_versioned_filename(prefix, version, build, ext)
 
         return f"{self.PROJECT}-latest-v{version}-b{build}.jar"
+
+
+def _construct_versioned_filename(base: str, version: str, build: int,
+                                  ext: str) -> str:
+    return f"{base}-v{version}-b{build}{ext}"
