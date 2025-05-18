@@ -17,7 +17,8 @@ from src.exceptions import MissingRequiredFieldError, ConfigNotFoundError, \
     ConfigParseError, NoBuildsFoundError, DownloadError, BuildDataError, \
     InvalidPaperVersionFormatError, PaperDownloadError, GeyserDownloadError, \
     FloodgateDownloadError, VersionInfoError, NoStableBuildFoundError, \
-    NoPaperVersionsFoundError, InvalidVersionDataError
+    NoPaperVersionsFoundError, InvalidVersionDataError, FileAccessError, \
+    HashCalculationError
 from src.manager.backup_manager import MinecraftBackupManager
 from src.manager.cache_manager import CacheManager
 from src.manager.config_manager import ConfigManager
@@ -147,12 +148,26 @@ if __name__ == "__main__":
     except DownloadError as e:
         print(f"Error during download: {e}")
         sys.exit(7)
+    except FileAccessError as e:
+        print(f"Error checking file: {e}")
+        print(e.original_exception)
+        if e.original_exception:
+            traceback.print_exception(type(e.original_exception),
+                                      e.original_exception, e.__traceback__)
+        sys.exit(19)
     except FloodgateDownloadError as e:
         print(f"Error downloading Floodgate: {e}")
         sys.exit(12)
     except GeyserDownloadError as e:
         print(f"Error downloading Geyser: {e}")
         sys.exit(11)
+    except HashCalculationError as e:
+        print(f"Error validating hash for file: {e}")
+        print(e.original_exception)
+        if e.original_exception:
+            traceback.print_exception(type(e.original_exception),
+                                      e.original_exception, e.__traceback__)
+        sys.exit(20)
     except InvalidPaperVersionFormatError as e:
         print(
             f"Error: Invalid Paper version format '{args.paper_version}'. "

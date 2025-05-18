@@ -4,14 +4,13 @@ from typing import Optional, Dict, Any, List
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 from src.exceptions import BuildDataError, NoBuildsFoundError
-from src.manager.file_manager import FileManager
-from src.utilities.download_utils import download_file
+from src.utilities.api_client import ApiClient, download_build
 from src.utilities.paper_api import PaperApiClient, validate_build_data
 
 DEFAULT_DOWNLOAD_DIR: str = "paper_downloads"
 
 
-class PaperDownloader:
+class PaperDownloader(ApiClient):
     def __init__(
             self,
             version_strategy: VersionFetchStrategy,
@@ -30,15 +29,11 @@ class PaperDownloader:
         version, build = self.version_strategy.get_version_and_build()
 
         if build is not None:
-            return self.download_build(version, build)
+            return self.download_artifact(version, build)
 
         return self.download_specific_version(version)
 
-    def download_build(self, version: Optional[str], build: int) \
-            -> Optional[str]:
-        if not version:
-            raise BuildDataError("Version is required.")
-
+    def download_artifact(self, version: str, build: int) -> Optional[str]:
         build_data: Dict[str, Any] = (
             self.paper_api_client.get_build_for_version(version, build))
         validate_build_data(build_data)
@@ -46,18 +41,15 @@ class PaperDownloader:
         filename: str = build_data['downloads']['application']['name']
         expected_hash: str = build_data['downloads']['application']['sha256']
         filepath: str = os.path.join(self.download_directory, filename)
-
-        if FileManager.check_existing_file(filepath, expected_hash):
-            return filepath
-
         download_url = self.paper_api_client.build_url(
             f"versions/{version}/builds/{build}/downloads/{filename}")
-        return download_file(
-            download_url,
+
+        return download_build(
             filepath,
+            expected_hash,
+            download_url,
             self.download_directory,
-            description=f"Downloading Paper version {version}, "
-                        f"build {build}"
+            f"Downloading Paper version {version}, build {build}"
         )
 
     def download_specific_version(self, version: Optional[str]) \
@@ -78,4 +70,4 @@ class PaperDownloader:
                 f"Paper version {version}.")
 
         latest_build: int = latest_build_info['build']
-        return self.download_build(version, latest_build)
+        return self.download_artifact(version, latest_build)

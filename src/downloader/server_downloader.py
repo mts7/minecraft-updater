@@ -31,7 +31,7 @@ class ServerDownloader:
 
         if build is not None:
             try:
-                return self.paper_downloader.download_build(version, build)
+                return self.paper_downloader.download_artifact(version, build)
             except Exception as e:
                 raise PaperDownloadError(
                     f"Error downloading Paper version {version}, "

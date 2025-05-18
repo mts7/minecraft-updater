@@ -14,7 +14,7 @@ from src.exceptions import (
 def download_file(download_url: str,
                   filepath: str,
                   download_directory: str = ".",
-                  description: Optional[str] = None) -> Optional[str]:
+                  description: Optional[str] = None) -> str:
     os.makedirs(download_directory, exist_ok=True)
     temp_file: Optional[Any] = None
     try:

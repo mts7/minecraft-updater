@@ -4,6 +4,8 @@ import json
 
 from src.exceptions import APIDataError, APIRequestError
 from src.manager.cache_manager import CacheManager
+from src.manager.file_manager import does_file_exist, does_file_hash_match
+from src.utilities.download_utils import download_file
 
 
 class ApiClient:
@@ -20,6 +22,15 @@ class ApiClient:
             if fetched_data:
                 self.cache.set(cache_key, fetched_data, expiry=expiry)
             return fetched_data
+
+
+def download_build(filepath: str, expected_hash: str, url: str,
+                   directory: str, description: str) -> str:
+    if (does_file_exist(filepath)
+            and does_file_hash_match(filepath, expected_hash)):
+        return filepath
+
+    return download_file(url, filepath, directory, description)
 
 
 def fetch_response(url: str) -> requests.Response:

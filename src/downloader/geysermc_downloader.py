@@ -3,9 +3,7 @@ import re
 from typing import Optional, Dict, Any
 
 from src.manager.cache_manager import CacheManager
-from src.manager.file_manager import FileManager
-from src.utilities.api_client import ApiClient, get_json
-from src.utilities.download_utils import download_file
+from src.utilities.api_client import ApiClient, get_json, download_build
 
 
 class GeyserMcDownloader(ApiClient):
@@ -71,21 +69,19 @@ class GeyserMcDownloader(ApiClient):
         if not version or build is None or not expected_hash:
             return None
 
-        filename = self._get_expected_filename(version,
-                                               build,
+        filename = self._get_expected_filename(version, build,
                                                filename_pattern)
         filepath = os.path.join(self.download_directory, filename)
+        download_url = self._build_download_url(project, version, build,
+                                                download_subpath)
 
-        if FileManager.check_existing_file(filepath, expected_hash):
-            return filepath
-
-        return download_file(
-            self._build_download_url(project, version, build,
-                                     download_subpath),
+        return download_build(
             filepath,
+            expected_hash,
+            download_url,
             self.download_directory,
-            description=(f"Downloading {project} version {version}, "
-                         f"build {build}"))
+            f"Downloading {project} version {version}, build {build}"
+        )
 
     def _fetch_latest_info(self) -> Optional[Dict[str, Any]]:
         api_url = self.API_BASE_URL_V2_LATEST
