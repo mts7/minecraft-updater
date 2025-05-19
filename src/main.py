@@ -160,6 +160,10 @@ if __name__ == "__main__":
         sys.exit(12)
     except GeyserDownloadError as e:
         print(f"Error downloading Geyser: {e}")
+        print(e.original_exception)
+        if e.original_exception:
+            traceback.print_exception(type(e.original_exception),
+                                      e.original_exception, e.__traceback__)
         sys.exit(11)
     except HashCalculationError as e:
         print(f"Error validating hash for file: {e}")

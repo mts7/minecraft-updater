@@ -1,41 +1,43 @@
 import os
 import re
+from abc import ABC, abstractmethod
 from typing import Optional, Dict, Any
 
 from src.manager.cache_manager import CacheManager
 from src.utilities.api_client import ApiClient, get_json, download_build
 
 
-class GeyserMcDownloader(ApiClient):
-    API_BASE_URL_V2_LATEST: str = ""
-    CACHE_FILE: str = "geyser_build_cache.json"
-    DOWNLOAD_BASE_URL_V2: str = (
-        "https://download.geysermc.org/v2/projects/{project}"
-        "/versions/{version}/builds/{build}/downloads/{download}"
-    )
-    PROJECT: str = ""
-    DOWNLOAD_SUBPATH: str = ""
-    DEFAULT_DOWNLOAD_DIR: str = ""
-    FILENAME_PATTERN: Optional[str] = None
+class GeyserMcDownloader(ABC):
+    BASE_URL: str = "https://download.geysermc.org/v2/"
 
     def __init__(self, download_directory: str,
-                 cache_manager: Optional[CacheManager] = None) -> None:
+                 cache_manager: CacheManager,
+                 project: str,
+                 subpath: str,
+                 download_path: str,
+                 base_url: Optional[str] = None,
+                 api_client: Optional[ApiClient] = None) -> None:
         self.download_directory: str = download_directory
         os.makedirs(download_directory, exist_ok=True)
-        self.cache = cache_manager if cache_manager is not None \
-            else CacheManager(self.CACHE_FILE)
-        super().__init__(self.cache)
+        self.cache = cache_manager
+        self.project = project
+        self.subpath = subpath
+        self.download_path: str = download_path
+        self.base_url = base_url if base_url is not None else self.BASE_URL
+        self.api_client = api_client if api_client is not None \
+            else ApiClient(self.cache)
         self._latest_info: Optional[Dict[str, Any]] = self.get_latest_info()
 
+    @abstractmethod
     def download_latest(self) -> Optional[str]:
-        raise NotImplementedError("Subclasses must implement download_latest")
+        pass
 
     def get_latest_build(self) -> Optional[int]:
         return self._latest_info.get("build") if self._latest_info else None
 
     def get_latest_info(self) -> Optional[Dict[str, Any]]:
         cache_key = "geyser_build"
-        return self._get_cached_data(
+        return self.api_client.get_cached_data(
             cache_key,
             lambda: self._fetch_latest_info(),
             expiry=6 * 3600
@@ -44,19 +46,15 @@ class GeyserMcDownloader(ApiClient):
     def get_latest_version(self) -> Optional[str]:
         return self._latest_info.get("version") if self._latest_info else None
 
-    def _build_download_url(self, project: str, version: str, build: str,
-                            download_subpath: str) -> str:
-        return self.DOWNLOAD_BASE_URL_V2.format(
-            project=project,
+    def _build_download_url(self, version: str, build: str) -> str:
+        return self.base_url + self.download_path.format(
+            project=self.project,
             version=version,
             build=build,
-            download=download_subpath
+            download=self.subpath
         )
 
-    def _download_artifact(self,
-                           project: str,
-                           download_subpath: str,
-                           filename_pattern: Optional[str] = None
+    def _download_artifact(self, filename_pattern: Optional[str] = None
                            ) -> Optional[str]:
         if self._latest_info is None:
             return None
@@ -64,7 +62,7 @@ class GeyserMcDownloader(ApiClient):
         version = self._latest_info.get("version")
         build = self._latest_info.get("build")
         expected_hash = (self._latest_info['downloads']
-                         .get(download_subpath, {}).get('sha256'))
+                         .get(self.subpath, {}).get('sha256'))
 
         if not version or build is None or not expected_hash:
             return None
@@ -72,19 +70,18 @@ class GeyserMcDownloader(ApiClient):
         filename = self._get_expected_filename(version, build,
                                                filename_pattern)
         filepath = os.path.join(self.download_directory, filename)
-        download_url = self._build_download_url(project, version, build,
-                                                download_subpath)
+        download_url = self._build_download_url(version, build)
 
         return download_build(
             filepath,
             expected_hash,
             download_url,
             self.download_directory,
-            f"Downloading {project} version {version}, build {build}"
+            f"Downloading {self.project} version {version}, build {build}"
         )
 
     def _fetch_latest_info(self) -> Optional[Dict[str, Any]]:
-        api_url = self.API_BASE_URL_V2_LATEST
+        api_url = self.base_url + self.download_path
         if not api_url:
             return None
 
@@ -96,10 +93,10 @@ class GeyserMcDownloader(ApiClient):
             build: int,
             filename_pattern: Optional[str] = None
     ) -> str:
-        default_filename = f"{self.PROJECT}-latest.jar"
+        default_filename = f"{self.project}-latest.jar"
         assert self._latest_info is not None
         base_name: str = (self._latest_info['downloads']
-                          .get(self.DOWNLOAD_SUBPATH, {})
+                          .get(self.subpath, {})
                           .get('name', default_filename))
         base, ext = os.path.splitext(base_name)
         constructed_filename: str = _construct_versioned_filename(base,
@@ -118,7 +115,7 @@ class GeyserMcDownloader(ApiClient):
             prefix = match.group(1)
             return _construct_versioned_filename(prefix, version, build, ext)
 
-        return f"{self.PROJECT}-latest-v{version}-b{build}.jar"
+        return f"{self.project}-latest-v{version}-b{build}.jar"
 
 
 def _construct_versioned_filename(base: str, version: str, build: int,

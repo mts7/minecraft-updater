@@ -102,7 +102,11 @@ class FileAccessError(Exception):
 
 class FloodgateDownloadError(Exception):
     """Raised when there is an error downloading Floodgate."""
-    pass
+
+    def __init__(self, message: str,
+                 original_exception: Optional[Exception] = None) -> None:
+        super().__init__(message)
+        self.original_exception: Optional[Exception] = original_exception
 
 
 class GeyserDownloadError(Exception):

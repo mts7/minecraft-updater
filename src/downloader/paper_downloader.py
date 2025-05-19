@@ -4,13 +4,13 @@ from typing import Optional, Dict, Any, List
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 from src.exceptions import BuildDataError, NoBuildsFoundError
-from src.utilities.api_client import ApiClient, download_build
+from src.utilities.api_client import download_build
 from src.utilities.paper_api import PaperApiClient, validate_build_data
 
 DEFAULT_DOWNLOAD_DIR: str = "paper_downloads"
 
 
-class PaperDownloader(ApiClient):
+class PaperDownloader:
     def __init__(
             self,
             version_strategy: VersionFetchStrategy,

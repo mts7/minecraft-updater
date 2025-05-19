@@ -1,0 +1,35 @@
+{
+    "geyser_build": [
+        1747642306.205119,
+        {
+            "project_id": "floodgate",
+            "project_name": "Floodgate",
+            "version": "2.2.4",
+            "build": 116,
+            "time": "2025-02-16T14:38:40.887Z",
+            "channel": "default",
+            "promoted": false,
+            "changes": [
+                {
+                    "commit": "0e3163c94220cdc516d1d1219557376c5216312b",
+                    "summary": "Use newly added BungeeCord ChannelInitializer API (#575)",
+                    "message": "Use newly added BungeeCord ChannelInitializer API (#575)\n\n* Update BungeeInjector.java\r\n\r\n* Update bungee version\r\n\r\n* Add a message when running an outdated Bungee version"
+                }
+            ],
+            "downloads": {
+                "bungee": {
+                    "name": "floodgate-bungee.jar",
+                    "sha256": "6e56baa5b3d3d7cb631bfa00570a9b361d0473fb4ca34208ee4ee2a9d6223c80"
+                },
+                "spigot": {
+                    "name": "floodgate-spigot.jar",
+                    "sha256": "9672c6116b411ae412154edf2d9315c4b67db1b36d18985479d3cc97c4b45ab5"
+                },
+                "velocity": {
+                    "name": "floodgate-velocity.jar",
+                    "sha256": "7eaf55c370380d6c8f68be3e93c5cfa41c3511c4325f39a2ff83f9760fa1366a"
+                }
+            }
+        }
+    ]
+}
