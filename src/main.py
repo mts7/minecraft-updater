@@ -98,7 +98,8 @@ def main(arguments: argparse.Namespace):
         return
 
     download_directory = DEFAULT_DOWNLOAD_DIRECTORY
-    downloader = ServerDownloader(download_directory, paper_version_strategy)
+    downloader = ServerDownloader(download_directory, paper_version_strategy,
+                                  arguments.geyser_base_url)
     downloader.download_server_files()
 
 
@@ -118,6 +119,8 @@ if __name__ == "__main__":
                         help="The Paper project to use.")
     parser.add_argument("--paper-cache-file",
                         help="The path to the cache file.")
+    parser.add_argument("--geyser-base-url",
+                        help="The base URL for the Geyser API.")
     args = parser.parse_args()
 
     try:

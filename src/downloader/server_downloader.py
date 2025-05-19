@@ -12,14 +12,17 @@ from src.utilities.paper_api import PaperApiClient
 
 class ServerDownloader:
     def __init__(self, download_directory: str,
-                 paper_version_strategy: VersionFetchStrategy):
+                 paper_version_strategy: VersionFetchStrategy,
+                 geyser_base_url: Optional[str] = None):
         paper_api_client = PaperApiClient()
         self.download_directory = download_directory
         self.paper_downloader = PaperDownloader(paper_version_strategy,
                                                 paper_api_client,
                                                 download_directory)
-        self.geyser_downloader = GeyserDownloader(download_directory)
-        self.floodgate_downloader = FloodgateDownloader(download_directory)
+        self.geyser_downloader = GeyserDownloader(download_directory,
+                                                  base_url=geyser_base_url)
+        self.floodgate_downloader = FloodgateDownloader(
+            download_directory, base_url=geyser_base_url)
 
     def download_paper(self):
         version_info = (self.paper_downloader.version_strategy
