@@ -21,7 +21,7 @@ from src.exceptions import MissingRequiredFieldError, ConfigNotFoundError, \
     HashCalculationError
 from src.manager.backup_manager import MinecraftBackupManager
 from src.manager.cache_manager import CacheManager
-from src.manager.config_manager import ConfigManager
+from src.manager.config_manager import load_config
 from src.manager.server_manager import MinecraftServerManager
 from src.utilities.paper_api import PaperApiClient
 
@@ -73,7 +73,7 @@ def download_server_updates(server_name: str,
 
 def main(arguments: argparse.Namespace):
     """Orchestrates the server management tasks."""
-    servers_config = ConfigManager.load_config(CONFIG_FILE)
+    servers_config = load_config(CONFIG_FILE)
     cache_manager = CacheManager(arguments.paper_cache_file) \
         if arguments.paper_cache_file else None
     paper_api_client = PaperApiClient(arguments.paper_base_url,
