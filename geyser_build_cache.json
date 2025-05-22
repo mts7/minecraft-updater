@@ -1,49 +1,49 @@
 {
     "geyser_build": [
-        1747642306.1099951,
+        1747961426.4416618,
         {
             "project_id": "geyser",
             "project_name": "Geyser",
             "version": "2.7.1",
-            "build": 833,
-            "time": "2025-05-17T16:07:39.002Z",
+            "build": 834,
+            "time": "2025-05-22T15:55:30.818Z",
             "channel": "default",
             "promoted": false,
             "changes": [
                 {
-                    "commit": "d0be6d9c481c848591d29b2dc19701ce836962b2",
-                    "summary": "Use the right javaId when registering non-vanilla block states (#5553)",
-                    "message": "Use the right javaId when registering non-vanilla block states (#5553)"
+                    "commit": "7c474596096610f38f47985a3d4dd135f49a43d0",
+                    "summary": "Resolve memory usage issues related to Netty 4.2 update (#5536)",
+                    "message": "Resolve memory usage issues related to Netty 4.2 update (#5536)\n\n* More proper workaround for direct connection using Netty 4.2\n\n* Add check for outdated Velocity\n\n* BungeeCord support for Netty 4.2\n\n* Use pooled allocator\n\n* Small cleanup: only one allocator system property check, pin comment to static commit\n\n* Set allocator type on Standalone using netty system property\n\n* Don't mess with allocator, both BungeeCord and Velocity set it globally\n\n* Temporarily remove io_uring support\n\nIn order to support io_uring transport after the 4.2 update, we'd need to separately handle 4.1 and 4.2 event loop group creation\n\n* Add compileOnly netty io_uring dependency for Geyser-BungeeCord\n\n* Exclude old incubator io_uring dependency on geyser-standalone\n\n---------\n\nCo-authored-by: Camotoy <20743703+Camotoy@users.noreply.github.com>"
                 }
             ],
             "downloads": {
                 "bungeecord": {
                     "name": "Geyser-BungeeCord.jar",
-                    "sha256": "bbf2b2b8b29715786206ef8bc3ae88c59a960eaef88c365b5af8e03d5c8e62d6"
+                    "sha256": "1723c6fe55ff46dd251f2136cd90c7a7a1408047ea49f27c55abb935b1776ea0"
                 },
                 "fabric": {
                     "name": "Geyser-Fabric.jar",
-                    "sha256": "d4390c94ccc3744d150f89ac80dab1f9a49aa8b0414543717c87422a6d823e3a"
+                    "sha256": "d4956a7a5ada83b9e3e77f5a7be9743d7ec2f2f5c148b6ebf3dd5f7712449069"
                 },
                 "neoforge": {
                     "name": "Geyser-NeoForge.jar",
-                    "sha256": "e669eadb09169979fff2a4126228bd4664c12a36a5e239cff11935553bfa20ae"
+                    "sha256": "ee342bfc73bab3b3f5acdf5825fb5259521f36532d8479f5442eae7cc1440795"
                 },
                 "spigot": {
                     "name": "Geyser-Spigot.jar",
-                    "sha256": "602d45c86c9358e8c176027e09067418e7cff5d49bc513a37a054efec0aecaf1"
+                    "sha256": "6ee18b72ca345ffe293ea0703cfdd8e951f7921eb20b1cae5ebc24bb75c9e98c"
                 },
                 "standalone": {
                     "name": "Geyser-Standalone.jar",
-                    "sha256": "98c3ba5e73ae28ae08e932f3d8441a6310cee909bc8cad198bbc8e253b4f8fc3"
+                    "sha256": "5793ffa11c9173949ac59f3e0580fb78857961774ad13a03a6ddf5e2b023a71c"
                 },
                 "velocity": {
                     "name": "Geyser-Velocity.jar",
-                    "sha256": "ae5770f7389e23a9c189768c6dd68e88ec0eb7e190580b47f6718bca8f30a6d6"
+                    "sha256": "a2aecc7e7509eb08610fc314fcafd00caece8c132e08fd6a4432662a80435222"
                 },
                 "viaproxy": {
                     "name": "Geyser-ViaProxy.jar",
-                    "sha256": "3c1a1f43edcd29b5a97382887ac54c75bd75f4c2190e44d3f54b5d76a608c6a7"
+                    "sha256": "641b8a299d85e488345f71d32cbaa5ca7b457040d0eb5f12fba364fee9b647bb"
                 }
             }
         }

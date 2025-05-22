@@ -26,7 +26,7 @@ class MinecraftServerManager:
             raise ScreenNotInstalled
 
         try:
-            subprocess.run(
+            result: subprocess.CompletedProcess = subprocess.run(
                 [
                     screen_path,
                     '-r', session, '-X', 'stuff', f"{command}\n"
@@ -34,6 +34,7 @@ class MinecraftServerManager:
                 check=True,
                 shell=False
             )  # nosec B603
+            result.check_returncode()
         except FileNotFoundError:
             print("Error: 'screen' command not found. Ensure it's installed.")
         except subprocess.CalledProcessError as e:
