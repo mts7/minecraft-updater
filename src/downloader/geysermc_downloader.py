@@ -94,7 +94,9 @@ class GeyserMcDownloader(ABC):
             filename_pattern: Optional[str] = None
     ) -> str:
         default_filename = f"{self.project}-latest.jar"
-        assert self._latest_info is not None
+        if self._latest_info is None:
+            return default_filename
+
         base_name: str = (self._latest_info['downloads']
                           .get(self.subpath, {})
                           .get('name', default_filename))

@@ -32,6 +32,7 @@ class BuildDataError(Exception):
                  url: Optional[str] = None,
                  version: Optional[str] = None,
                  build_number: Optional[int] = None) -> None:
+        self.message = message
         super().__init__(message)
         self.original_exception: Optional[Exception] = original_exception
         self.url: Optional[str] = url

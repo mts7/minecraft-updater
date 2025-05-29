@@ -3,12 +3,8 @@ import sys
 import traceback
 from typing import Dict, Optional, Any, Tuple
 
-from src.downloader.paper_version_strategy.latest_version_strategy import \
-    LatestVersionStrategy
-from src.downloader.paper_version_strategy.specific_version_strategy import \
-    SpecificVersionStrategy
-from src.downloader.paper_version_strategy.stable_version_strategy import \
-    StableVersionStrategy
+from src.downloader.paper_version_strategy.paper_version_strategy_factory \
+    import create_version_strategy
 from src.downloader.paper_version_strategy.version_fetch_strategy import \
     VersionFetchStrategy
 from src.downloader.server_downloader import ServerDownloader
@@ -43,10 +39,11 @@ def backup_server(server_name: str,
             )
 
     server_manager = MinecraftServerManager(
-        server_settings['server_directory'],
-        server_settings['backup_directory'],
         server_settings.get('screen_name', 'minecraft'))
-    backup_manager = MinecraftBackupManager(server_manager)
+    backup_manager = MinecraftBackupManager(
+        server_manager,
+        server_settings['server_directory'],
+        server_settings['backup_directory'])
 
     backup_manager.backup_files(server_settings.get('backup_exclude', []))
 
@@ -71,39 +68,47 @@ def download_server_updates(server_name: str,
     return downloader.download_server_files()
 
 
-def main(arguments: argparse.Namespace):
+def main(
+    arguments: argparse.Namespace,
+    config_loader=load_config,
+    cache_manager_cls=CacheManager,
+    paper_api_client_cls=PaperApiClient,
+    downloader_cls=ServerDownloader,
+    backup_func=backup_server,
+    download_updates_func=download_server_updates,
+    version_strategy_factory=create_version_strategy,
+):
     """Orchestrates the server management tasks."""
-    servers_config = load_config(CONFIG_FILE)
-    cache_manager = CacheManager(arguments.paper_cache_file) \
-        if arguments.paper_cache_file else None
-    paper_api_client = PaperApiClient(arguments.paper_base_url,
-                                      arguments.paper_project,
-                                      cache_manager=cache_manager)
 
-    paper_version = arguments.paper_version
-    paper_version_strategy: VersionFetchStrategy
-    if paper_version == "latest":
-        paper_version_strategy = LatestVersionStrategy(paper_api_client)
-    elif paper_version is None or paper_version != "stable":
-        paper_version_strategy = SpecificVersionStrategy(paper_api_client,
-                                                         paper_version)
-    else:
-        paper_version_strategy = StableVersionStrategy(paper_api_client)
+    servers_config = config_loader(CONFIG_FILE)
+
+    cache_manager = cache_manager_cls(arguments.paper_cache_file) \
+        if arguments.paper_cache_file else None
+
+    paper_api_client = paper_api_client_cls(
+        arguments.paper_base_url,
+        arguments.paper_project,
+        cache_manager=cache_manager,
+    )
+
+    paper_version_strategy = version_strategy_factory(arguments, paper_api_client)
 
     if arguments.server and arguments.server in servers_config:
-        new_files = download_server_updates(arguments.server, servers_config,
-                                            paper_version_strategy)
+        new_files = download_updates_func(
+            arguments.server, servers_config, paper_version_strategy
+        )
         if any(new_files):
-            backup_server(arguments.server, servers_config)
+            backup_func(arguments.server, servers_config)
         return
 
     download_directory = DEFAULT_DOWNLOAD_DIRECTORY
-    downloader = ServerDownloader(download_directory, paper_version_strategy,
-                                  arguments.geyser_base_url)
+    downloader = downloader_cls(
+        download_directory, paper_version_strategy, arguments.geyser_base_url
+    )
     downloader.download_server_files()
 
 
-if __name__ == "__main__":
+def handle_command_line():
     parser = argparse.ArgumentParser(
         description="Minecraft Server Management Utility")
     parser.add_argument("--server",
@@ -122,7 +127,6 @@ if __name__ == "__main__":
     parser.add_argument("--geyser-base-url",
                         help="The base URL for the Geyser API.")
     args = parser.parse_args()
-
     try:
         main(args)
     except APIDataError as e:
@@ -219,3 +223,7 @@ if __name__ == "__main__":
         print(f"An unexpected error occurred: {e}")
         traceback.print_exception(type(e), e, e.__traceback__)
         sys.exit(1)
+
+
+if __name__ == "__main__":
+    handle_command_line()

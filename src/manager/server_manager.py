@@ -1,4 +1,3 @@
-import os
 import shutil
 import subprocess  # nosec B404
 from typing import Optional
@@ -7,13 +6,8 @@ from src.exceptions import ScreenNotInstalled
 
 
 class MinecraftServerManager:
-    def __init__(self, server_directory: str, backup_directory: str,
-                 screen_name: str = "minecraft"):
-        self.server_directory = server_directory
-        self.backup_directory = backup_directory
+    def __init__(self, screen_name: str = "minecraft"):
         self.screen_name = screen_name
-        os.makedirs(self.backup_directory, exist_ok=True)
-        self.original_cwd = ""
 
     def send_screen_command(self,
                             command: str,

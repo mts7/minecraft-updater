@@ -9,12 +9,12 @@ from src.manager.server_manager import MinecraftServerManager
 
 
 class MinecraftBackupManager:
-    def __init__(self, server_manager: MinecraftServerManager):
+    def __init__(self, server_manager: MinecraftServerManager,
+                 server_directory: str, backup_directory: str):
         self.server_manager = server_manager
-        self.server_directory = server_manager.server_directory
+        self.server_directory = server_directory
         self.server_directory_base = os.path.basename(self.server_directory)
-        self.backup_directory = server_manager.backup_directory
-        os.makedirs(self.backup_directory, exist_ok=True)
+        self.backup_directory = backup_directory
 
     def backup_files(self,
                      exclude_patterns: Optional[List[str]] = None,
@@ -23,6 +23,8 @@ class MinecraftBackupManager:
         #  TODO: modify server_manager to know if screen is actually running
         #  TODO:   prior to sending the screen command (or send the screen
         #  TODO:   command without caring about whether it worked or not)
+        os.makedirs(self.backup_directory, exist_ok=True)
+
         screen_running: bool = False
         try:
             self._notify_backup_begin()
