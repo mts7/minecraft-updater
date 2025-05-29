@@ -16,12 +16,6 @@ from src.main import backup_server, download_server_updates, main, \
 
 class VersionFetchStrategy:
     pass
-class LatestVersionStrategy(VersionFetchStrategy):
-    pass
-class SpecificVersionStrategy(VersionFetchStrategy):
-    pass
-class StableVersionStrategy(VersionFetchStrategy):
-    pass
 DEFAULT_DOWNLOAD_DIRECTORY = "downloads"
 CONFIG_FILE = "config.yaml"
 
