@@ -4,18 +4,25 @@ import sys
 import pytest
 from unittest.mock import patch, MagicMock
 
-from src.exceptions import MissingRequiredFieldError, APIDataError, \
-    APIRequestError, BuildDataError, ConfigNotFoundError, ConfigParseError, \
-    DownloadError, FileAccessError, FloodgateDownloadError, \
-    GeyserDownloadError, HashCalculationError, InvalidPaperVersionFormatError, \
-    InvalidVersionDataError, NoBuildsFoundError, NoPaperVersionsFoundError, \
-    NoStableBuildFoundError, PaperDownloadError, VersionInfoError
+from src.exceptions import (
+    MissingRequiredFieldError, APIDataError, APIRequestError, BuildDataError,
+    ConfigNotFoundError, ConfigParseError, DownloadError, FileAccessError,
+    FloodgateDownloadError, GeyserDownloadError, HashCalculationError,
+    InvalidPaperVersionFormatError, InvalidVersionDataError,
+    NoBuildsFoundError, NoPaperVersionsFoundError, NoStableBuildFoundError,
+    PaperDownloadError, VersionInfoError)
 from src.main import backup_server, download_server_updates, main, \
     handle_command_line
+
+PAPER_URL = "https://example.com"
+
+GEYSER_URL = "https://geyser.example.com"
 
 
 class VersionFetchStrategy:
     pass
+
+
 DEFAULT_DOWNLOAD_DIRECTORY = "downloads"
 CONFIG_FILE = "config.yaml"
 
@@ -47,11 +54,14 @@ def test_backup_server_success(mock_server_cls, mock_backup_cls):
         '/srv/mc',
         '/data/backups'
     )
-    mock_backup_instance.backup_files.assert_called_once_with(['logs/', '*.tmp'])
+    mock_backup_instance.backup_files.assert_called_once_with(['logs/',
+                                                               '*.tmp'])
+
 
 @patch('src.main.MinecraftBackupManager')
 @patch('src.main.MinecraftServerManager')
-def test_backup_server_uses_default_screen_name(mock_server_cls, mock_backup_cls):
+def test_backup_server_uses_default_screen_name(mock_server_cls,
+                                                mock_backup_cls):
     server_name = 'beta'
     config = {
         'beta': {
@@ -77,7 +87,9 @@ def test_backup_server_uses_default_screen_name(mock_server_cls, mock_backup_cls
     )
     mock_backup.backup_files.assert_called_once_with([])
 
-@pytest.mark.parametrize("missing_field", ['server_directory', 'backup_directory'])
+
+@pytest.mark.parametrize("missing_field", ['server_directory',
+                                           'backup_directory'])
 def test_backup_server_missing_required_fields(missing_field):
     server_name = 'omega'
     config = {
@@ -93,6 +105,7 @@ def test_backup_server_missing_required_fields(missing_field):
 
     assert missing_field in str(exc_info.value)
 
+
 @patch('src.main.ServerDownloader')
 def test_download_server_updates_success(mock_downloader_cls):
     server_name = 'gamma'
@@ -104,14 +117,16 @@ def test_download_server_updates_success(mock_downloader_cls):
     strategy = MagicMock()
 
     mock_downloader = MagicMock()
-    mock_downloader.download_server_files.return_value = ('1.20.1', 'build-456', 'https://example.com/download.jar')
+    mock_downloader.download_server_files.return_value = (
+        '1.20.1', 'build-456', PAPER_URL + '/download.jar')
     mock_downloader_cls.return_value = mock_downloader
 
     result = download_server_updates(server_name, config, strategy)
 
     mock_downloader_cls.assert_called_once_with('/downloads/gamma', strategy)
     mock_downloader.download_server_files.assert_called_once_with()
-    assert result == ('1.20.1', 'build-456', 'https://example.com/download.jar')
+    assert result == ('1.20.1', 'build-456', PAPER_URL + '/download.jar')
+
 
 @pytest.mark.parametrize("value", [None, ""])
 def test_download_server_updates_missing_download_directory(value):
@@ -130,14 +145,14 @@ def test_download_server_updates_missing_download_directory(value):
 
 
 def test_main_specific_server_updates_no_new_files():
-    """Test when a specific server is requested and no new files are downloaded."""
+    """Test when a specific server is requested and downloads no new files."""
     mock_arguments = argparse.Namespace(
         server="test_server",
         paper_cache_file=None,
-        paper_base_url="https://example.com",
+        paper_base_url=PAPER_URL,
         paper_project="paper",
         paper_version="1.20.1",
-        geyser_base_url="https://geyser.example.com",
+        geyser_base_url=GEYSER_URL,
     )
     mock_config = {"test_server": {"path": "/path/to/server"}}
     mock_config_loader = MagicMock(return_value=mock_config)
@@ -147,7 +162,8 @@ def test_main_specific_server_updates_no_new_files():
     mock_backup_func = MagicMock()
     mock_download_updates_func = MagicMock(return_value=[])
     mock_version_strategy = MagicMock(spec=VersionFetchStrategy)
-    mock_create_version_strategy = MagicMock(return_value=mock_version_strategy)
+    mock_create_version_strategy = MagicMock(
+        return_value=mock_version_strategy)
 
     main(
         mock_arguments,
@@ -163,7 +179,7 @@ def test_main_specific_server_updates_no_new_files():
     mock_config_loader.assert_called_once_with(CONFIG_FILE)
     mock_cache_manager_cls.assert_not_called()
     mock_paper_api_client_cls.assert_called_once_with(
-        "https://example.com", "paper", cache_manager=None
+        PAPER_URL, "paper", cache_manager=None
     )
     mock_create_version_strategy.assert_called_once_with(
         mock_arguments, mock_paper_api_client_cls.return_value
@@ -176,14 +192,14 @@ def test_main_specific_server_updates_no_new_files():
 
 
 def test_main_specific_server_updates_with_new_files():
-    """Test when a specific server is requested and new files are downloaded."""
+    """Test when a specific server is requested and downloads new files."""
     mock_arguments = argparse.Namespace(
         server="test_server",
         paper_cache_file="cache.json",
-        paper_base_url="https://example.com",
+        paper_base_url=PAPER_URL,
         paper_project="paper",
         paper_version="1.20.1",
-        geyser_base_url="https://geyser.example.com",
+        geyser_base_url=GEYSER_URL,
     )
     mock_config = {"test_server": {"path": "/path/to/server"}}
     mock_config_loader = MagicMock(return_value=mock_config)
@@ -193,7 +209,8 @@ def test_main_specific_server_updates_with_new_files():
     mock_backup_func = MagicMock()
     mock_download_updates_func = MagicMock(return_value=["server.jar"])
     mock_version_strategy = MagicMock(spec=VersionFetchStrategy)
-    mock_create_version_strategy = MagicMock(return_value=mock_version_strategy)
+    mock_create_version_strategy = MagicMock(
+        return_value=mock_version_strategy)
 
     main(
         mock_arguments,
@@ -209,7 +226,7 @@ def test_main_specific_server_updates_with_new_files():
     mock_config_loader.assert_called_once_with(CONFIG_FILE)
     mock_cache_manager_cls.assert_called_once_with("cache.json")
     mock_paper_api_client_cls.assert_called_once_with(
-        "https://example.com", "paper", cache_manager=mock_cache_manager_cls.return_value
+        PAPER_URL, "paper", cache_manager=mock_cache_manager_cls.return_value
     )
     mock_create_version_strategy.assert_called_once_with(
         mock_arguments, mock_paper_api_client_cls.return_value
@@ -226,10 +243,10 @@ def test_main_download_all_servers():
     mock_arguments = argparse.Namespace(
         server=None,
         paper_cache_file="cache.json",
-        paper_base_url="https://example.com",
+        paper_base_url=PAPER_URL,
         paper_project="paper",
         paper_version="latest",
-        geyser_base_url="https://geyser.example.com",
+        geyser_base_url=GEYSER_URL,
     )
     mock_config_loader = MagicMock(return_value={"server1": {}, "server2": {}})
     mock_cache_manager_cls = MagicMock()
@@ -238,7 +255,8 @@ def test_main_download_all_servers():
     mock_backup_func = MagicMock()
     mock_download_updates_func = MagicMock()
     mock_version_strategy = MagicMock(spec=VersionFetchStrategy)
-    mock_create_version_strategy = MagicMock(return_value=mock_version_strategy)
+    mock_create_version_strategy = MagicMock(
+        return_value=mock_version_strategy)
 
     main(
         mock_arguments,
@@ -254,7 +272,7 @@ def test_main_download_all_servers():
     mock_config_loader.assert_called_once_with(CONFIG_FILE)
     mock_cache_manager_cls.assert_called_once_with("cache.json")
     mock_paper_api_client_cls.assert_called_once_with(
-        "https://example.com", "paper", cache_manager=mock_cache_manager_cls.return_value
+        PAPER_URL, "paper", cache_manager=mock_cache_manager_cls.return_value
     )
     mock_create_version_strategy.assert_called_once_with(
         mock_arguments, mock_paper_api_client_cls.return_value
@@ -262,7 +280,7 @@ def test_main_download_all_servers():
     mock_download_updates_func.assert_not_called()
     mock_backup_func.assert_not_called()
     mock_downloader_cls.assert_called_once_with(
-        DEFAULT_DOWNLOAD_DIRECTORY, mock_version_strategy, "https://geyser.example.com"
+        DEFAULT_DOWNLOAD_DIRECTORY, mock_version_strategy, GEYSER_URL
     )
     mock_downloader_cls.return_value.download_server_files.assert_called_once()
 
@@ -272,10 +290,10 @@ def test_main_specific_server_not_in_config():
     mock_arguments = argparse.Namespace(
         server="non_existent_server",
         paper_cache_file=None,
-        paper_base_url="https://example.com",
+        paper_base_url=PAPER_URL,
         paper_project="paper",
         paper_version="latest",
-        geyser_base_url="https://geyser.example.com",
+        geyser_base_url=GEYSER_URL,
     )
     mock_config_loader = MagicMock(return_value={"test_server": {}})
     mock_cache_manager_cls = MagicMock()
@@ -284,7 +302,8 @@ def test_main_specific_server_not_in_config():
     mock_backup_func = MagicMock()
     mock_download_updates_func = MagicMock()
     mock_version_strategy = MagicMock(spec=VersionFetchStrategy)
-    mock_create_version_strategy = MagicMock(return_value=mock_version_strategy)
+    mock_create_version_strategy = MagicMock(
+        return_value=mock_version_strategy)
 
     main(
         mock_arguments,
@@ -300,7 +319,7 @@ def test_main_specific_server_not_in_config():
     mock_config_loader.assert_called_once_with(CONFIG_FILE)
     mock_cache_manager_cls.assert_not_called()
     mock_paper_api_client_cls.assert_called_once_with(
-        "https://example.com", "paper", cache_manager=None
+        PAPER_URL, "paper", cache_manager=None
     )
     mock_create_version_strategy.assert_called_once_with(
         mock_arguments, mock_paper_api_client_cls.return_value
@@ -308,7 +327,7 @@ def test_main_specific_server_not_in_config():
     mock_download_updates_func.assert_not_called()
     mock_backup_func.assert_not_called()
     mock_downloader_cls.assert_called_once_with(
-        DEFAULT_DOWNLOAD_DIRECTORY, mock_version_strategy, "https://geyser.example.com"
+        DEFAULT_DOWNLOAD_DIRECTORY, mock_version_strategy, GEYSER_URL
     )
     mock_downloader_cls.return_value.download_server_files.assert_called_once()
 
@@ -318,10 +337,10 @@ def test_main_no_paper_cache():
     mock_arguments = argparse.Namespace(
         server=None,
         paper_cache_file=None,
-        paper_base_url="https://example.com",
+        paper_base_url=PAPER_URL,
         paper_project="paper",
         paper_version="latest",
-        geyser_base_url="https://geyser.example.com",
+        geyser_base_url=GEYSER_URL,
     )
     mock_config_loader = MagicMock(return_value={})
     mock_cache_manager_cls = MagicMock()
@@ -330,7 +349,8 @@ def test_main_no_paper_cache():
     mock_backup_func = MagicMock()
     mock_download_updates_func = MagicMock()
     mock_version_strategy = MagicMock(spec=VersionFetchStrategy)
-    mock_create_version_strategy = MagicMock(return_value=mock_version_strategy)
+    mock_create_version_strategy = MagicMock(
+        return_value=mock_version_strategy)
 
     main(
         mock_arguments,
@@ -346,7 +366,7 @@ def test_main_no_paper_cache():
     mock_config_loader.assert_called_once_with(CONFIG_FILE)
     mock_cache_manager_cls.assert_not_called()
     mock_paper_api_client_cls.assert_called_once_with(
-        "https://example.com", "paper", cache_manager=None
+        PAPER_URL, "paper", cache_manager=None
     )
     mock_create_version_strategy.assert_called_once_with(
         mock_arguments, mock_paper_api_client_cls.return_value
@@ -354,7 +374,7 @@ def test_main_no_paper_cache():
     mock_download_updates_func.assert_not_called()
     mock_backup_func.assert_not_called()
     mock_downloader_cls.assert_called_once_with(
-        DEFAULT_DOWNLOAD_DIRECTORY, mock_version_strategy, "https://geyser.example.com"
+        DEFAULT_DOWNLOAD_DIRECTORY, mock_version_strategy, GEYSER_URL
     )
     mock_downloader_cls.return_value.download_server_files.assert_called_once()
 

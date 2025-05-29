@@ -91,7 +91,8 @@ def main(
         cache_manager=cache_manager,
     )
 
-    paper_version_strategy = version_strategy_factory(arguments, paper_api_client)
+    paper_version_strategy = version_strategy_factory(arguments,
+                                                      paper_api_client)
 
     if arguments.server and arguments.server in servers_config:
         new_files = download_updates_func(
