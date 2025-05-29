@@ -67,7 +67,6 @@ def test_backup_server_uses_default_screen_name(mock_server_cls,
         'beta': {
             'server_directory': '/srv/beta',
             'backup_directory': '/backups/beta'
-            # no screen_name provided
         }
     }
 
@@ -79,7 +78,7 @@ def test_backup_server_uses_default_screen_name(mock_server_cls,
 
     backup_server(server_name, config)
 
-    mock_server_cls.assert_called_once_with('minecraft')  # default screen name
+    mock_server_cls.assert_called_once_with('minecraft')
     mock_backup_cls.assert_called_once_with(
         mock_server,
         '/srv/beta',
@@ -422,7 +421,6 @@ def test_handle_command_line_success():
     with patch.object(sys, 'argv', simulate_args("--server", "test")), \
          patch("src.main.main") as mock_main:
 
-        # Should not raise or exit
         handle_command_line()
         mock_main.assert_called_once()
 

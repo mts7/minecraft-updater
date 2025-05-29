@@ -28,5 +28,5 @@ class StableVersionStrategy(VersionFetchStrategy):
                 return version, stable_build_number
 
         raise NoStableBuildFoundError(
-            "Could not find a stable build for"
+            "Could not find a stable build for "
             "any of the available Paper versions.")
