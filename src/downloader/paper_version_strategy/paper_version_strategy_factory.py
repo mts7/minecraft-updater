@@ -17,7 +17,7 @@ def create_version_strategy(
     paper_version = arguments.paper_version
     if paper_version == "latest":
         return LatestVersionStrategy(paper_api_client)
-    elif paper_version is None or paper_version != "stable":
-        return SpecificVersionStrategy(paper_api_client, paper_version)
-    else:
+    elif paper_version is None or paper_version == "stable":
         return StableVersionStrategy(paper_api_client)
+    else:
+        return SpecificVersionStrategy(paper_api_client, paper_version)
